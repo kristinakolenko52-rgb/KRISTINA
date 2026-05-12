@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Запись — KRISTINA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a class="logo" href="/">KRISTINA<span>.</span></a>
+    <button class="burger" id="burger"><span></span><span></span><span></span></button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/" data-i18n="nav_home">Главная</a></li>
+      <li><a href="/portfolio" data-i18n="nav_portfolio">Портфолио</a></li>
+      <li><a href="/prices" data-i18n="nav_prices">Прайс</a></li>
+      <li><a href="/before-after">До/После</a></li>
+      <li><a href="/faq">FAQ</a></li>
+      <li><a href="/booking" class="nav-cta active" data-i18n="nav_booking">Запись</a></li>
+      {% if user %}
+        <li><a href="/cabinet">Кабинет</a></li>
+        {% if user.is_admin %}<li><a href="/admin">Админ</a></li>{% endif %}
+        <li><a href="/logout" style="color:#a07070;">Выйти</a></li>
+      {% else %}
+        <li><a href="/login">Войти</a></li>
+      {% endif %}
+      <li>
+        <div class="lang-switch">
+          <button class="lang-btn" data-lang="ru">RU</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="cs">CS</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="page-hero-content container">
+    <p class="section-label" data-i18n="book_eyebrow">Бронирование</p>
+    <h1 data-i18n="book_title">Записаться на приём</h1>
+    <p class="page-hero-sub" data-i18n="book_sub">Выберите услугу, удобные дату и время. Я подтвержу запись в течение нескольких часов.</p>
+  </div>
+</section>
+
+<section id="booking">
+  <div class="container">
+    <div class="booking-wrap">
+
+      <!-- STEPPER -->
+      <div class="stepper">
+        <div class="step-item active" data-step="1"><div class="step-num">1</div><span data-i18n="step1">Услуга</span></div>
+        <div class="step-connector"></div>
+        <div class="step-item" data-step="2"><div class="step-num">2</div><span data-i18n="step2">Дата и время</span></div>
+        <div class="step-connector"></div>
+        <div class="step-item" data-step="3"><div class="step-num">3</div><span data-i18n="step3">Данные</span></div>
+        <div class="step-connector"></div>
+        <div class="step-item" data-step="4"><div class="step-num">4</div><span data-i18n="step4">Подтверждение</span></div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="booking-panel active" id="bstep1">
+        <div class="booking-card">
+          <h3 data-i18n="step1_head">Выберите услугу и место</h3>
+          <div class="form-group">
+            <label data-i18n="label_service">Услуга</label>
+            <select id="serviceSelect">
+              <option value="" data-i18n="opt_default">Выберите услугу</option>
+              <option value="nude:1200" data-i18n="opt_nude">Нюдовый макияж — 1 200 CZK</option>
+              <option value="eve:1800" data-i18n="opt_eve">Вечерний макияж — 1 800 CZK</option>
+              <option value="wed:3200" data-i18n="opt_wed">Свадебный макияж — 3 200 CZK</option>
+              <option value="trial:990" data-i18n="opt_trial">Пробный макияж — 990 CZK</option>
+              <option value="l_mini:1500" data-i18n="opt_l_mini">Урок · Мини — 1 500 CZK</option>
+              <option value="l_full:2000" data-i18n="opt_l_full">Урок · Полный — 2 000 CZK</option>
+              <option value="l_adv:2800" data-i18n="opt_l_adv">Урок · Продвинутый — 2 800 CZK</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label data-i18n="label_location">Место проведения</label>
+            <div class="loc-options">
+              <label class="loc-opt">
+                <input type="radio" name="loc" value="salon" checked/>
+                <div class="loc-card">
+                  <div class="loc-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M3 10L12 3l9 7v11H3V10z" stroke="#C9969D" stroke-width="1.3" stroke-linejoin="round"/><rect x="9" y="14" width="6" height="7" rx="1" stroke="#C9969D" stroke-width="1.3"/></svg></div>
+                  <div><span class="loc-title" data-i18n="loc_salon">В салоне</span><span class="loc-sub">Praha, Vinohrady</span></div>
+                </div>
+              </label>
+              <label class="loc-opt">
+                <input type="radio" name="loc" value="home"/>
+                <div class="loc-card">
+                  <div class="loc-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3C8.1 3 5 6.1 5 10c0 6 7 13 7 13s7-7 7-13c0-3.9-3.1-7-7-7z" stroke="#C9969D" stroke-width="1.3"/><circle cx="12" cy="10" r="2.5" stroke="#C9969D" stroke-width="1.3"/></svg></div>
+                  <div><span class="loc-title" data-i18n="loc_home">Выезд на дом</span><span class="loc-sub" data-i18n="loc_home_sub">+500 CZK в пределах Праги</span></div>
+                </div>
+              </label>
+            </div>
+            <div class="loc-note">
+              <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#C9969D" stroke-width="1.2"/><path d="M10 9v5M10 7h.01" stroke="#C9969D" stroke-width="1.4" stroke-linecap="round"/></svg>
+              <span data-i18n="loc_note_text">При выезде на дом к стоимости услуги добавляется 500 CZK.</span>
+            </div>
+          </div>
+          <div class="panel-actions">
+            <button class="btn btn-primary" onclick="goStep(2)" data-i18n="btn_next">Далее →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="booking-panel" id="bstep2">
+        <div class="booking-card">
+          <h3 data-i18n="step2_head">Выберите дату и время</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label data-i18n="label_date">Дата</label>
+              <input type="date" id="dateInput"/>
+            </div>
+            <div class="form-group">
+              <label data-i18n="label_time">Время</label>
+              <select id="timeSelect">
+                <option>09:00</option><option>10:00</option><option>11:00</option>
+                <option>12:00</option><option>13:00</option><option>14:00</option>
+                <option>15:00</option><option>16:00</option><option>17:00</option>
+                <option>18:00</option><option>19:00</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label data-i18n="label_quick_time">Быстрый выбор</label>
+            <div class="time-grid">
+              <button type="button" class="time-slot" data-time="09:00">09:00</button>
+              <button type="button" class="time-slot" data-time="10:00">10:00</button>
+              <button type="button" class="time-slot active" data-time="11:00">11:00</button>
+              <button type="button" class="time-slot" data-time="12:00">12:00</button>
+              <button type="button" class="time-slot" data-time="13:00">13:00</button>
+              <button type="button" class="time-slot" data-time="14:00">14:00</button>
+              <button type="button" class="time-slot" data-time="15:00">15:00</button>
+              <button type="button" class="time-slot" data-time="16:00">16:00</button>
+              <button type="button" class="time-slot" data-time="17:00">17:00</button>
+              <button type="button" class="time-slot" disabled data-time="18:00">18:00</button>
+            </div>
+          </div>
+          <div class="panel-actions">
+            <button class="btn btn-outline" onclick="goStep(1)" data-i18n="btn_back">← Назад</button>
+            <button class="btn btn-primary" onclick="goStep(3)" data-i18n="btn_next">Далее →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="booking-panel" id="bstep3">
+        <div class="booking-card">
+          <h3 data-i18n="step3_head">Ваши данные</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label data-i18n="label_fname">Имя</label>
+              <input type="text" id="fname" placeholder="Анна" data-i18n-ph="ph_fname"/>
+            </div>
+            <div class="form-group">
+              <label data-i18n="label_lname">Фамилия</label>
+              <input type="text" id="lname" placeholder="Новакова" data-i18n-ph="ph_lname"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label data-i18n="label_phone">Телефон</label>
+            <input type="tel" id="phone" placeholder="+420 000 000 000" data-i18n-ph="ph_phone"/>
+          </div>
+          <div class="form-group">
+            <label data-i18n="label_email">Email</label>
+            <input type="email" id="email" placeholder="anna@email.com" data-i18n-ph="ph_email"/>
+          </div>
+          <div class="form-group" id="addressGroup" style="display:none">
+            <label data-i18n="label_address">Адрес (выезд на дом)</label>
+            <input type="text" id="address" placeholder="Улица, дом, район Праги" data-i18n-ph="ph_address"/>
+          </div>
+          <div class="form-group">
+            <label data-i18n="label_wishes">Пожелания</label>
+            <textarea rows="3" id="wishes" placeholder="Расскажите о поводе, референсах, пожеланиях..." data-i18n-ph="ph_wishes"></textarea>
+          </div>
+
+          <!-- Discount options -->
+          <div style="background:#FBF2F3;border-radius:12px;padding:1.2rem 1.4rem;margin-bottom:1rem;">
+            <p style="font-size:.82rem;color:#a07070;margin:0 0 .8rem;font-weight:500;letter-spacing:.04em;text-transform:uppercase;">Получить скидку</p>
+
+            <label style="display:flex;align-items:flex-start;gap:.75rem;cursor:pointer;margin-bottom:.9rem;">
+              <input type="checkbox" id="photoPermission" style="margin-top:.2rem;accent-color:#C9969D;width:16px;height:16px;flex-shrink:0;"/>
+              <span style="font-size:.9rem;color:#3a2a2d;line-height:1.5;">
+                <strong style="color:#C9969D;">−5%</strong> — Разрешаю использовать фотографии до/после в портфолио и блоге<br/>
+                <span style="font-size:.8rem;color:#a07070;">Скидка применится сразу к этой записи</span>
+              </span>
+            </label>
+
+            <div id="referralDiscountBanner" style="display:none;font-size:.9rem;color:#155724;background:#D1ECE4;border-radius:8px;padding:.6rem .9rem;">
+              🎁 У вас есть реферальная скидка <strong>5%</strong> — применится автоматически
+            </div>
+          </div>
+
+          <div class="panel-actions">
+            <button class="btn btn-outline" onclick="goStep(2)" data-i18n="btn_back">← Назад</button>
+            <button class="btn btn-primary" onclick="goStep(4)" data-i18n="btn_next">Далее →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="booking-panel" id="bstep4">
+        <div class="booking-card">
+          <h3 data-i18n="step4_head">Подтвердите запись</h3>
+          <div class="confirm-table">
+            <div class="confirm-row"><span class="confirm-label" data-i18n="conf_service">Услуга</span><span class="confirm-val" id="cService">—</span></div>
+            <div class="confirm-row"><span class="confirm-label" data-i18n="conf_loc">Место</span><span class="confirm-val" id="cLoc">—</span></div>
+            <div class="confirm-row"><span class="confirm-label" data-i18n="conf_date">Дата</span><span class="confirm-val" id="cDate">—</span></div>
+            <div class="confirm-row"><span class="confirm-label" data-i18n="conf_time">Время</span><span class="confirm-val" id="cTime">—</span></div>
+            <div class="confirm-row"><span class="confirm-label" data-i18n="conf_name">Имя</span><span class="confirm-val" id="cName">—</span></div>
+            <div class="confirm-row"><span class="confirm-label" data-i18n="conf_phone">Телефон</span><span class="confirm-val" id="cPhone">—</span></div>
+            <div class="confirm-row" id="cDiscountRow" style="display:none;color:#C9969D;"><span class="confirm-label">Скидка</span><span class="confirm-val" id="cDiscount">—</span></div>
+            <div class="confirm-row"><span class="confirm-label" data-i18n="conf_total">Итого</span><span class="confirm-val total" id="cTotal">—</span></div>
+          </div>
+          <p class="form-note" data-i18n="conf_note">Нажимая кнопку, вы соглашаетесь с обработкой персональных данных</p>
+          <div class="panel-actions">
+            <button class="btn btn-outline" onclick="goStep(3)" data-i18n="btn_back">← Назад</button>
+            <button class="btn btn-primary" id="confirmBtn" data-i18n="btn_confirm">Подтвердить запись</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="booking-success" id="bookingSuccess" style="display:none">
+      <svg viewBox="0 0 72 72" fill="none"><circle cx="36" cy="36" r="34" stroke="#C9969D" stroke-width="1.5"/><path d="M22 36l10 10 20-20" stroke="#C9969D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h2 data-i18n="success_title">Запись подтверждена!</h2>
+      <p data-i18n="success_text">Я свяжусь с вами в ближайшее время для уточнения деталей. Спасибо за доверие!</p>
+      <a href="/" class="btn btn-primary" data-i18n="success_btn">На главную</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-inner">
+    <a class="logo" href="/">KRISTINA<span>.</span></a>
+    <p class="footer-tagline" data-i18n="footer_tagline">Профессиональный визажист · Прага</p>
+    <nav class="footer-nav">
+      <a href="/" data-i18n="nav_home">Главная</a>
+      <a href="/portfolio" data-i18n="nav_portfolio">Портфолио</a>
+      <a href="/prices" data-i18n="nav_prices">Прайс</a>
+      <a href="/booking" data-i18n="nav_booking">Запись</a>
+      <a href="/privacy">Конфиденциальность</a>
+    </nav>
+    <p class="footer-copy" data-i18n="footer_copy">© 2026 Kristina · Все права защищены</p>
+  </div>
+</footer>
+
+<script src="/static/lang.js"></script>
+<script src="/static/script.js"></script>
+<script>
+  const di = document.getElementById('dateInput');
+  di.min = new Date().toISOString().split('T')[0];
+  di.value = di.min;
+
+  document.querySelectorAll('.time-slot:not(:disabled)').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.time-slot').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('timeSelect').value = btn.dataset.time;
+    });
+  });
+
+  document.querySelectorAll('input[name="loc"]').forEach(r => {
+    r.addEventListener('change', () => {
+      document.getElementById('addressGroup').style.display = r.value === 'home' ? 'flex' : 'none';
+    });
+  });
+
+  function goStep(n) {
+    if (n === 4) fillConfirm();
+    document.querySelectorAll('.booking-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('bstep' + n).classList.add('active');
+    document.querySelectorAll('.step-item').forEach(item => {
+      const s = parseInt(item.dataset.step);
+      item.classList.toggle('active', s === n);
+      item.classList.toggle('done', s < n);
+    });
+    window.scrollTo({ top: document.getElementById('booking').offsetTop - 90, behavior: 'smooth' });
+  }
+
+  // Show referral discount banner if user has pending_discount (injected by server)
+  const hasPendingDiscount = {{ 'true' if user and user.pending_discount else 'false' }};
+  if (hasPendingDiscount) {
+    document.getElementById('referralDiscountBanner').style.display = 'block';
+  }
+
+  function calcDiscount(basePrice) {
+    let pct = 0;
+    if (document.getElementById('photoPermission').checked) pct += 5;
+    if (hasPendingDiscount) pct += 5;
+    return Math.round(basePrice * pct / 100);
+  }
+
+  function fillConfirm() {
+    const sel = document.getElementById('serviceSelect');
+    const sText = sel.value ? sel.options[sel.selectedIndex].text : '—';
+    const loc = document.querySelector('input[name="loc"]:checked');
+    const isHome = loc && loc.value === 'home';
+    const locNames = { ru: ['Салон', 'Выезд на дом'], en: ['Salon', 'Home visit'], cs: ['Salon', 'Výjezd domů'] };
+    const lang = localStorage.getItem('lang') || 'ru';
+    const locText = locNames[lang][isHome ? 1 : 0];
+    const activeSlot = document.querySelector('.time-slot.active');
+    const timeVal = activeSlot ? activeSlot.dataset.time : document.getElementById('timeSelect').value;
+    const fname = document.getElementById('fname').value;
+    const lname = document.getElementById('lname').value;
+    let price = sel.value ? parseInt(sel.value.split(':')[1]) : 0;
+    if (isHome) price += 500;
+    const discount = calcDiscount(price);
+    const finalPrice = price - discount;
+
+    document.getElementById('cService').textContent = sText || '—';
+    document.getElementById('cLoc').textContent = locText;
+    document.getElementById('cDate').textContent = document.getElementById('dateInput').value || '—';
+    document.getElementById('cTime').textContent = timeVal || '—';
+    document.getElementById('cName').textContent = [fname, lname].filter(Boolean).join(' ') || '—';
+    document.getElementById('cPhone').textContent = document.getElementById('phone').value || '—';
+
+    if (discount > 0) {
+      document.getElementById('cDiscountRow').style.display = '';
+      document.getElementById('cDiscount').textContent = '−' + discount.toLocaleString('cs-CZ') + ' CZK';
+      document.getElementById('cTotal').textContent = finalPrice.toLocaleString('cs-CZ') + ' CZK';
+    } else {
+      document.getElementById('cDiscountRow').style.display = 'none';
+      document.getElementById('cTotal').textContent = price ? price.toLocaleString('cs-CZ') + ' CZK' : '—';
+    }
+
+    document.getElementById('confirmBtn').onclick = async () => {
+      const sel = document.getElementById('serviceSelect');
+      const isHome = document.querySelector('input[name="loc"]:checked')?.value === 'home';
+      let price = sel.value ? parseInt(sel.value.split(':')[1]) : 0;
+      if (isHome) price += 500;
+
+      const body = {
+        service: sel.value ? sel.value.split(':')[0] : '',
+        service_label: sel.value ? sel.options[sel.selectedIndex].text : '',
+        location: isHome ? 'home' : 'salon',
+        date: document.getElementById('dateInput').value,
+        time: timeVal,
+        first_name: document.getElementById('fname').value,
+        last_name: document.getElementById('lname').value,
+        phone: document.getElementById('phone').value,
+        email: document.getElementById('email').value,
+        address: document.getElementById('address').value,
+        wishes: document.getElementById('wishes').value,
+        total: price,
+        photo_permission: document.getElementById('photoPermission').checked,
+      };
+
+      const res = await fetch('/api/booking', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(body)
+      });
+      const data = await res.json();
+      if (data.ok) {
+        document.querySelector('.booking-wrap').style.display = 'none';
+        document.getElementById('bookingSuccess').style.display = 'flex';
+        window.scrollTo({ top: document.getElementById('booking').offsetTop - 90, behavior: 'smooth' });
+      }
+    };
+  }
+</script>
+</body>
+</html>

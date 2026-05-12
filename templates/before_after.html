@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>До и После — KRISTINA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <style>
+    .ba-hero { padding: 7rem 1.5rem 3rem; text-align: center; background: linear-gradient(160deg, #FBF2F3 0%, #fff 100%); }
+    .ba-hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.4rem, 6vw, 3.8rem); font-weight: 400; color: #3a2a2d; margin: 0 0 .8rem; }
+    .ba-hero p  { color: #a07070; font-size: 1rem; max-width: 520px; margin: 0 auto; }
+    .ba-section { padding: 3rem 1.5rem 2rem; }
+    .ba-section .container { max-width: 1100px; margin: 0 auto; }
+    .ba-cat-label { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 400; color: #3a2a2d; margin: 0 0 1.5rem; position: relative; display: inline-block; }
+    .ba-cat-label::after { content:''; display:block; height:1px; background:#E8C5C9; margin-top:.3rem; }
+    .ba-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+    .ba-card { border-radius: 14px; overflow: hidden; box-shadow: 0 4px 24px rgba(201,150,157,.15); background: #fff; }
+    .ba-pair { display: grid; grid-template-columns: 1fr 1fr; position: relative; }
+    .ba-pair img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; }
+    .ba-divider { position: absolute; top: 0; left: 50%; width: 2px; height: 100%; background: #fff; z-index: 2; }
+    .ba-labels { display: grid; grid-template-columns: 1fr 1fr; }
+    .ba-label { text-align: center; padding: .5rem; font-size: .78rem; font-weight: 500; letter-spacing: .06em; color: #a07070; text-transform: uppercase; }
+    .ba-label.after { color: #C9969D; }
+    .ba-info { padding: .9rem 1.2rem; border-top: 1px solid #faf0f1; }
+    .ba-info h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 500; color: #3a2a2d; margin: 0 0 .2rem; }
+    .ba-info p  { font-size: .82rem; color: #a07070; margin: 0; }
+    .cta-strip  { background: linear-gradient(135deg, #C9969D, #D4A0A8); color: #fff; text-align: center; padding: 3.5rem 1.5rem; margin-top: 1rem; }
+    .cta-strip h2 { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 400; margin: 0 0 .8rem; }
+    .cta-strip p  { margin: 0 0 1.5rem; opacity: .9; }
+    .cta-strip .btn-primary { background: #fff; color: #C9969D; }
+    .cta-strip .btn-primary:hover { background: #f7e8ea; }
+  </style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a class="logo" href="/">KRISTINA<span>.</span></a>
+    <button class="burger" id="burger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/" data-i18n="nav_home">Главная</a></li>
+      <li><a href="/portfolio" data-i18n="nav_portfolio">Портфолио</a></li>
+      <li><a href="/prices" data-i18n="nav_prices">Прайс</a></li>
+      <li><a href="/before-after" class="active" data-i18n="nav_ba">До/После</a></li>
+      <li><a href="/faq">FAQ</a></li>
+      <li><a href="/booking" class="nav-cta" data-i18n="nav_booking">Запись</a></li>
+      {% if user %}
+        <li><a href="/cabinet" data-i18n="nav_cabinet">Кабинет</a></li>
+        {% if user.is_admin %}<li><a href="/admin">Админ</a></li>{% endif %}
+        <li><a href="/logout" style="color:#a07070;" data-i18n="nav_logout">Выйти</a></li>
+      {% else %}
+        <li><a href="/login" data-i18n="nav_login">Войти</a></li>
+      {% endif %}
+      <li>
+        <div class="lang-switch">
+          <button class="lang-btn" data-lang="ru">RU</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="cs">CS</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="ba-hero">
+  <p class="section-label" data-i18n="ba_eyebrow">Результаты работы</p>
+  <h1 data-i18n="ba_title">До и <em>после</em></h1>
+  <p data-i18n="ba_sub">Реальные результаты — без фильтров и фотошопа. Каждый образ создан индивидуально.</p>
+</div>
+
+<!-- Nude -->
+<section class="ba-section">
+  <div class="container">
+    <p class="ba-cat-label" data-i18n="ba_nude_cat">Нюдовый макияж</p>
+    <div class="ba-grid">
+
+      <div class="ba-card">
+        <div class="ba-pair">
+          <img src="https://images.pexels.com/photos/3785147/pexels-photo-3785147.jpeg?auto=compress&cs=tinysrgb&w=400" alt="До"/>
+          <img src="https://images.pexels.com/photos/10658350/pexels-photo-10658350.jpeg?auto=compress&cs=tinysrgb&w=400" alt="После"/>
+          <div class="ba-divider"></div>
+        </div>
+        <div class="ba-labels"><span class="ba-label" data-i18n="ba_before">До</span><span class="ba-label after" data-i18n="ba_after">После</span></div>
+        <div class="ba-info"><h4>Glass Skin Nude</h4><p>Лёгкий дневной образ, стекляная кожа</p></div>
+      </div>
+
+      <div class="ba-card">
+        <div class="ba-pair">
+          <img src="https://images.pexels.com/photos/3785155/pexels-photo-3785155.jpeg?auto=compress&cs=tinysrgb&w=400" alt="До"/>
+          <img src="https://images.pexels.com/photos/17188444/pexels-photo-17188444.jpeg?auto=compress&cs=tinysrgb&w=400" alt="После"/>
+          <div class="ba-divider"></div>
+        </div>
+        <div class="ba-labels"><span class="ba-label" data-i18n="ba_before">До</span><span class="ba-label after" data-i18n="ba_after">После</span></div>
+        <div class="ba-info"><h4>Nude Glossy</h4><p>Сияние, блеск и натуральность</p></div>
+      </div>
+
+      <div class="ba-card">
+        <div class="ba-pair">
+          <img src="https://images.pexels.com/photos/3997374/pexels-photo-3997374.jpeg?auto=compress&cs=tinysrgb&w=400" alt="До"/>
+          <img src="https://images.pexels.com/photos/8796469/pexels-photo-8796469.jpeg?auto=compress&cs=tinysrgb&w=400" alt="После"/>
+          <div class="ba-divider"></div>
+        </div>
+        <div class="ba-labels"><span class="ba-label" data-i18n="ba_before">До</span><span class="ba-label after" data-i18n="ba_after">После</span></div>
+        <div class="ba-info"><h4>Нюд 2026</h4><p>Современный минималистичный образ</p></div>
+      </div>
+
+    </div>
+
+    <!-- Evening -->
+    <p class="ba-cat-label" data-i18n="ba_eve_cat">Вечерний макияж</p>
+    <div class="ba-grid">
+
+      <div class="ba-card">
+        <div class="ba-pair">
+          <img src="https://images.pexels.com/photos/3785147/pexels-photo-3785147.jpeg?auto=compress&cs=tinysrgb&w=400" alt="До"/>
+          <img src="https://images.pexels.com/photos/2584260/pexels-photo-2584260.jpeg?auto=compress&cs=tinysrgb&w=400" alt="После"/>
+          <div class="ba-divider"></div>
+        </div>
+        <div class="ba-labels"><span class="ba-label" data-i18n="ba_before">До</span><span class="ba-label after" data-i18n="ba_after">После</span></div>
+        <div class="ba-info"><h4>Дымчатый взгляд</h4><p>Smoky eye для особого вечера</p></div>
+      </div>
+
+      <div class="ba-card">
+        <div class="ba-pair">
+          <img src="https://images.pexels.com/photos/3997374/pexels-photo-3997374.jpeg?auto=compress&cs=tinysrgb&w=400" alt="До"/>
+          <img src="https://images.pexels.com/photos/33497576/pexels-photo-33497576.jpeg?auto=compress&cs=tinysrgb&w=400" alt="После"/>
+          <div class="ba-divider"></div>
+        </div>
+        <div class="ba-labels"><span class="ba-label" data-i18n="ba_before">До</span><span class="ba-label after" data-i18n="ba_after">После</span></div>
+        <div class="ba-info"><h4>Элитный дискотечный</h4><p>Стиль 2026 — блёстки и сияние</p></div>
+      </div>
+
+      <div class="ba-card">
+        <div class="ba-pair">
+          <img src="https://images.pexels.com/photos/3785155/pexels-photo-3785155.jpeg?auto=compress&cs=tinysrgb&w=400" alt="До"/>
+          <img src="https://images.pexels.com/photos/6956856/pexels-photo-6956856.jpeg?auto=compress&cs=tinysrgb&w=400" alt="После"/>
+          <div class="ba-divider"></div>
+        </div>
+        <div class="ba-labels"><span class="ba-label" data-i18n="ba_before">До</span><span class="ba-label after" data-i18n="ba_after">После</span></div>
+        <div class="ba-info"><h4>Красная дорожка</h4><p>Дерзкий вечерний образ</p></div>
+      </div>
+
+    </div>
+
+    <!-- Wedding -->
+    <p class="ba-cat-label" data-i18n="ba_wed_cat">Свадебный макияж</p>
+    <div class="ba-grid">
+
+      <div class="ba-card">
+        <div class="ba-pair">
+          <img src="https://images.pexels.com/photos/3785147/pexels-photo-3785147.jpeg?auto=compress&cs=tinysrgb&w=400" alt="До"/>
+          <img src="https://images.pexels.com/photos/32427370/pexels-photo-32427370.jpeg?auto=compress&cs=tinysrgb&w=400" alt="После"/>
+          <div class="ba-divider"></div>
+        </div>
+        <div class="ba-labels"><span class="ba-label" data-i18n="ba_before">До</span><span class="ba-label after" data-i18n="ba_after">После</span></div>
+        <div class="ba-info"><h4>Нежная невеста</h4><p>Романтичный свадебный образ</p></div>
+      </div>
+
+      <div class="ba-card">
+        <div class="ba-pair">
+          <img src="https://images.pexels.com/photos/3997374/pexels-photo-3997374.jpeg?auto=compress&cs=tinysrgb&w=400" alt="До"/>
+          <img src="https://images.pexels.com/photos/35538642/pexels-photo-35538642.jpeg?auto=compress&cs=tinysrgb&w=400" alt="После"/>
+          <div class="ba-divider"></div>
+        </div>
+        <div class="ba-labels"><span class="ba-label" data-i18n="ba_before">До</span><span class="ba-label after" data-i18n="ba_after">После</span></div>
+        <div class="ba-info"><h4>Классическая невеста</h4><p>Элегантный образ для большого дня</p></div>
+      </div>
+
+      <div class="ba-card">
+        <div class="ba-pair">
+          <img src="https://images.pexels.com/photos/3785155/pexels-photo-3785155.jpeg?auto=compress&cs=tinysrgb&w=400" alt="До"/>
+          <img src="https://images.pexels.com/photos/19216136/pexels-photo-19216136.jpeg?auto=compress&cs=tinysrgb&w=400" alt="После"/>
+          <div class="ba-divider"></div>
+        </div>
+        <div class="ba-labels"><span class="ba-label" data-i18n="ba_before">До</span><span class="ba-label after" data-i18n="ba_after">После</span></div>
+        <div class="ba-info"><h4>Утро невесты</h4><p>Нежный образ с сохраняющимся стойким результатом</p></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="cta-strip">
+  <h2 data-i18n="ba_cta_title">Хотите такой же результат?</h2>
+  <p data-i18n="ba_cta_sub">Запишитесь на консультацию и мы создадим ваш идеальный образ</p>
+  <a href="/booking" class="btn btn-primary" data-i18n="ba_cta_btn">Записаться онлайн</a>
+</div>
+
+<footer>
+  <div class="container footer-inner">
+    <a class="logo" href="/">KRISTINA<span>.</span></a>
+    <p class="footer-tagline">Профессиональный визажист · Прага</p>
+    <nav class="footer-nav">
+      <a href="/">Главная</a>
+      <a href="/portfolio">Портфолио</a>
+      <a href="/prices">Прайс</a>
+      <a href="/booking">Запись</a>
+      <a href="/privacy">Конфиденциальность</a>
+    </nav>
+    <p class="footer-copy">© 2026 Kristina · Все права защищены</p>
+  </div>
+</footer>
+
+<script src="/static/lang.js"></script>
+<script src="/static/script.js"></script>
+</body>
+</html>

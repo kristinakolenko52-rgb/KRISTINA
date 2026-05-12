@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Портфолио — KRISTINA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a class="logo" href="/">KRISTINA<span>.</span></a>
+    <button class="burger" id="burger"><span></span><span></span><span></span></button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/" data-i18n="nav_home">Главная</a></li>
+      <li><a href="/portfolio" class="active" data-i18n="nav_portfolio">Портфолио</a></li>
+      <li><a href="/prices" data-i18n="nav_prices">Прайс</a></li>
+      <li><a href="/before-after">До/После</a></li>
+      <li><a href="/faq">FAQ</a></li>
+      <li><a href="/booking" class="nav-cta" data-i18n="nav_booking">Запись</a></li>
+      {% if user %}
+        <li><a href="/cabinet">Кабинет</a></li>
+        {% if user.is_admin %}<li><a href="/admin">Админ</a></li>{% endif %}
+        <li><a href="/logout" style="color:#a07070;">Выйти</a></li>
+      {% else %}
+        <li><a href="/login">Войти</a></li>
+      {% endif %}
+      <li>
+        <div class="lang-switch">
+          <button class="lang-btn" data-lang="ru">RU</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="cs">CS</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="page-hero-content container">
+    <p class="section-label" data-i18n="port_eyebrow">Мои работы</p>
+    <h1 data-i18n="port_title">Портфолио</h1>
+  </div>
+</section>
+
+<section id="gallery" style="padding-block: clamp(70px,9vw,120px); background: var(--white);">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label" data-i18n="port_label">Галерея</p>
+      <h2 data-i18n="port_subtitle">Нюдовый · Вечерний · Свадебный</h2>
+      <p class="section-desc" data-i18n="port_desc">Каждый образ создаётся индивидуально.</p>
+    </div>
+
+    <div class="port-tabs">
+      <button class="port-tab active" data-tab="nude" data-i18n="tab_nude">Нюдовый</button>
+      <button class="port-tab" data-tab="evening" data-i18n="tab_eve">Вечерний</button>
+      <button class="port-tab" data-tab="wedding" data-i18n="tab_wed">Свадебный</button>
+    </div>
+
+    <!-- NUDE -->
+    <div class="port-panel active" id="tab-nude">
+      <h3 data-i18n="nude_title" style="margin-bottom:.5rem;">Нюдовый макияж</h3>
+      <p class="port-panel-desc" data-i18n="nude_desc">Естественная красота без маски. Акцент на здоровье кожи, мягком контуре и сдержанном цвете.</p>
+      <div class="gallery-grid">
+        <div class="gallery-item tall">
+          <img src="https://images.pexels.com/photos/10658350/pexels-photo-10658350.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Нюдовый макияж"/>
+          <span class="img-label">Glass skin 2026</span>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.pexels.com/photos/17188444/pexels-photo-17188444.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Натуральный макияж"/>
+          <span class="img-label">Нюд · веснушки</span>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.pexels.com/photos/8796469/pexels-photo-8796469.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Дневной макияж"/>
+          <span class="img-label">Натуральный образ</span>
+        </div>
+        <div class="gallery-item wide">
+          <img src="https://images.pexels.com/photos/17217476/pexels-photo-17217476.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Нюдовый образ"/>
+          <span class="img-label">Нюд · дневной свет</span>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.pexels.com/photos/32651782/pexels-photo-32651782.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Лёгкий макияж"/>
+          <span class="img-label">Лёгкий нюд</span>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.pexels.com/photos/6514335/pexels-photo-6514335.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Чистая кожа"/>
+          <span class="img-label">Чистая кожа</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- EVENING -->
+    <div class="port-panel" id="tab-evening">
+      <h3 data-i18n="eve_title" style="margin-bottom:.5rem;">Вечерний макияж</h3>
+      <p class="port-panel-desc" data-i18n="eve_desc">Стойкий выразительный образ для торжеств, ресторанов и светских мероприятий.</p>
+      <div class="gallery-grid">
+        <div class="gallery-item tall">
+          <img src="https://images.pexels.com/photos/2584260/pexels-photo-2584260.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Вечерний макияж диско"/>
+          <span class="img-label">Диско · 2026</span>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.pexels.com/photos/33497576/pexels-photo-33497576.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Глиттер вечерний"/>
+          <span class="img-label">Глиттер · вечер</span>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.pexels.com/photos/6956856/pexels-photo-6956856.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Яркий вечерний макияж"/>
+          <span class="img-label">Красная помада</span>
+        </div>
+        <div class="gallery-item wide">
+          <img src="https://images.pexels.com/photos/10593904/pexels-photo-10593904.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Элитный вечерний образ"/>
+          <span class="img-label">Элитный образ</span>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.pexels.com/photos/11865986/pexels-photo-11865986.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Клубный макияж"/>
+          <span class="img-label">Клуб · вечер</span>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.pexels.com/photos/9423935/pexels-photo-9423935.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Глиттер макияж"/>
+          <span class="img-label">Арт · глиттер</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEDDING -->
+    <div class="port-panel" id="tab-wedding">
+      <h3 data-i18n="wed_title" style="margin-bottom:.5rem;">Свадебный макияж</h3>
+      <p class="port-panel-desc" data-i18n="wed_desc">Незабываемый образ в самый важный день — нежный, элегантный, стойкий до утра.</p>
+      <div class="gallery-grid">
+        <div class="gallery-item tall">
+          <img src="https://images.pexels.com/photos/32427370/pexels-photo-32427370.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Свадебный макияж"/>
+          <span class="img-label">Сборы невесты</span>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.pexels.com/photos/35538642/pexels-photo-35538642.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Невеста смеётся"/>
+          <span class="img-label">Момент счастья</span>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.pexels.com/photos/19216136/pexels-photo-19216136.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Невеста у окна"/>
+          <span class="img-label">Невеста у окна</span>
+        </div>
+        <div class="gallery-item wide">
+          <img src="https://images.pexels.com/photos/11813979/pexels-photo-11813979.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Портрет невесты"/>
+          <span class="img-label">Образ невесты</span>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.pexels.com/photos/36807075/pexels-photo-36807075.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Свадебный макияж крупно"/>
+          <span class="img-label">Финальный образ</span>
+        </div>
+        <div class="gallery-item">
+          <img src="https://images.pexels.com/photos/31243099/pexels-photo-31243099.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Помада невесте"/>
+          <span class="img-label">Последний штрих</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="gallery-note" data-i18n="gallery_note">Больше работ в моём <a href="#">Instagram @kristina.mua.prague</a></p>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container about-grid">
+    <div class="about-visual fade-up">
+      <div class="about-img-frame">
+        <div class="about-img-placeholder">
+          <svg viewBox="0 0 300 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="300" height="380" fill="#EDD5D8"/>
+            <ellipse cx="150" cy="130" rx="70" ry="80" fill="#C9969D" opacity="0.4"/>
+            <ellipse cx="150" cy="290" rx="110" ry="90" fill="#C9969D" opacity="0.3"/>
+            <circle cx="150" cy="125" r="52" fill="#D4A0A8"/>
+            <ellipse cx="150" cy="315" rx="85" ry="65" fill="#D4A0A8"/>
+            <text x="150" y="195" text-anchor="middle" font-family="Georgia" font-size="13" fill="#8B5E66" opacity="0.65">ваше фото</text>
+          </svg>
+        </div>
+        <div class="about-badge">
+          <span class="badge-num" data-i18n="about_exp_num">8+</span>
+          <span class="badge-text" data-i18n="about_exp_label">лет опыта</span>
+        </div>
+      </div>
+    </div>
+    <div class="about-text fade-up">
+      <p class="section-label" data-i18n="about_eyebrow">Обо мне</p>
+      <h2 data-i18n="about_title">Визаж — это<br/><em>диалог</em> с красотой</h2>
+      <p data-i18n="about_text1">Меня зовут Кристина. Я профессиональный визажист с восьмилетним опытом работы в Праге.</p>
+      <p data-i18n="about_text2">Специализируюсь на свадебном макияже, вечерних и нюдовых образах. Провожу индивидуальные уроки.</p>
+      <div class="about-stats">
+        <div class="stat"><span class="stat-num" data-i18n="stat1_num">1200+</span><span class="stat-label" data-i18n="stat1_label">клиентов</span></div>
+        <div class="stat"><span class="stat-num" data-i18n="stat2_num">300+</span><span class="stat-label" data-i18n="stat2_label">свадеб</span></div>
+        <div class="stat"><span class="stat-num" data-i18n="stat3_num">50+</span><span class="stat-label" data-i18n="stat3_label">фотосессий</span></div>
+      </div>
+      <a href="/booking" class="btn btn-primary" data-i18n="about_btn">Записаться</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label" data-i18n="rev_eyebrow">Отзывы</p>
+      <h2 data-i18n="rev_title">Что говорят клиенты</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial fade-up">
+        <div class="testimonial-stars">★★★★★</div>
+        <p data-i18n="rev1_text">"Кристина сделала мне свадебный макияж — это было волшебство."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#E8C4C8">А</div>
+          <div><span class="author-name" data-i18n="rev1_name">Анастасия К.</span><span class="author-detail" data-i18n="rev1_service">Свадебный макияж</span></div>
+        </div>
+      </div>
+      <div class="testimonial fade-up">
+        <div class="testimonial-stars">★★★★★</div>
+        <p data-i18n="rev2_text">"Была на уроке макияжа — настоящее открытие!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#D4B0C0">М</div>
+          <div><span class="author-name" data-i18n="rev2_name">Мария В.</span><span class="author-detail" data-i18n="rev2_service">Урок макияжа</span></div>
+        </div>
+      </div>
+      <div class="testimonial fade-up">
+        <div class="testimonial-stars">★★★★★</div>
+        <p data-i18n="rev3_text">"Делала вечерний макияж — профессионализм, уютная атмосфера. Теперь только к Кристине!"</p>
+        <div class="testimonial-author">
+          <div class="author-avatar" style="background:#C9B0D0">Е</div>
+          <div><span class="author-name" data-i18n="rev3_name">Елена П.</span><span class="author-detail" data-i18n="rev3_service">Вечерний макияж</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-inner">
+    <a class="logo" href="/">KRISTINA<span>.</span></a>
+    <p class="footer-tagline" data-i18n="footer_tagline">Профессиональный визажист · Прага</p>
+    <nav class="footer-nav">
+      <a href="/" data-i18n="nav_home">Главная</a>
+      <a href="/portfolio" data-i18n="nav_portfolio">Портфолио</a>
+      <a href="/prices" data-i18n="nav_prices">Прайс</a>
+      <a href="/booking" data-i18n="nav_booking">Запись</a>
+      <a href="/privacy">Конфиденциальность</a>
+    </nav>
+    <p class="footer-copy" data-i18n="footer_copy">© 2026 Kristina · Все права защищены</p>
+  </div>
+</footer>
+
+<script src="/static/lang.js"></script>
+<script src="/static/script.js"></script>
+<script>
+  document.querySelectorAll('.port-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.port-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.port-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

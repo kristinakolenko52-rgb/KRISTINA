@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>KRISTINA — Визажист · Прага</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a class="logo" href="/">KRISTINA<span>.</span></a>
+    <button class="burger" id="burger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/" class="active" data-i18n="nav_home">Главная</a></li>
+      <li><a href="/portfolio" data-i18n="nav_portfolio">Портфолио</a></li>
+      <li><a href="/prices" data-i18n="nav_prices">Прайс</a></li>
+      <li><a href="/before-after" data-i18n="nav_ba">До/После</a></li>
+      <li><a href="/faq">FAQ</a></li>
+      <li><a href="/booking" class="nav-cta" data-i18n="nav_booking">Запись</a></li>
+      {% if user %}
+        <li><a href="/cabinet" data-i18n="nav_cabinet">Кабинет</a></li>
+        {% if user.is_admin %}<li><a href="/admin">Админ</a></li>{% endif %}
+        <li><a href="/logout" style="color:#a07070;" data-i18n="nav_logout">Выйти</a></li>
+      {% else %}
+        <li><a href="/login" data-i18n="nav_login">Войти</a></li>
+      {% endif %}
+      <li>
+        <div class="lang-switch">
+          <button class="lang-btn" data-lang="ru">RU</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="cs">CS</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow" data-i18n="hero_label">Профессиональный визажист · Прага</p>
+    <h1 data-i18n="hero_h1">Создаю образы,<br/><em>которые остаются</em><br/>в памяти</h1>
+    <p class="hero-sub" data-i18n="hero_sub">Нюдовый, вечерний и свадебный макияж — а также уроки красоты в Праге</p>
+    <div class="hero-actions">
+      <a href="#register" class="btn btn-primary" data-i18n="hero_btn1">Зарегистрироваться</a>
+      <a href="/portfolio" class="btn btn-ghost" data-i18n="hero_btn2">Смотреть работы</a>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label" data-i18n="why_label">Почему выбирают меня</p>
+      <h2 data-i18n="why_title">Красота — это доверие</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card fade-up">
+        <div class="why-icon">
+          <svg viewBox="0 0 48 48" fill="none"><path d="M10 38c2-8 6-12 14-12s12 4 14 12" stroke="#C9969D" stroke-width="1.5" stroke-linecap="round"/><circle cx="24" cy="18" r="8" stroke="#C9969D" stroke-width="1.5"/></svg>
+        </div>
+        <h3 data-i18n="why1_title">Профессиональная косметика</h3>
+        <p data-i18n="why1_text">Работаю только с Charlotte Tilbury, MAC и NARS</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-icon">
+          <svg viewBox="0 0 48 48" fill="none"><path d="M14 26l6 6 14-14" stroke="#C9969D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="8" y="10" width="32" height="28" rx="4" stroke="#C9969D" stroke-width="1.5"/></svg>
+        </div>
+        <h3 data-i18n="why2_title">Индивидуальный подход</h3>
+        <p data-i18n="why2_text">Каждый образ создаётся под ваш тип лица и повод</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-icon">
+          <svg viewBox="0 0 48 48" fill="none"><path d="M24 8C16.3 8 10 14.3 10 22c0 10 14 22 14 22s14-12 14-22c0-7.7-6.3-14-14-14z" stroke="#C9969D" stroke-width="1.5"/><circle cx="24" cy="22" r="4" stroke="#C9969D" stroke-width="1.5"/></svg>
+        </div>
+        <h3 data-i18n="why3_title">Выезд на дом</h3>
+        <p data-i18n="why3_text">Приеду в любую точку Праги и Праги-Запад</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-icon">
+          <svg viewBox="0 0 48 48" fill="none"><path d="M24 8l4 8 9 1.3-6.5 6.3 1.5 9L24 28l-8 4.6 1.5-9L11 17.3l9-1.3z" stroke="#C9969D" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 data-i18n="why4_title">Опыт 8+ лет</h3>
+        <p data-i18n="why4_text">Более 1200 клиентов и 300 свадеб в портфолио</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTER -->
+<section id="register">
+  <div class="container">
+    <div class="reg-grid">
+      <div class="reg-visual-wrap fade-up">
+        <div class="reg-img-ph">
+          <svg viewBox="0 0 340 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="340" height="420" fill="#EDD5D8"/>
+            <ellipse cx="170" cy="145" rx="75" ry="85" fill="#C9969D" opacity="0.35"/>
+            <ellipse cx="170" cy="330" rx="120" ry="95" fill="#C9969D" opacity="0.25"/>
+            <circle cx="170" cy="138" r="56" fill="#D4A0A8"/>
+            <ellipse cx="170" cy="350" rx="92" ry="70" fill="#D4A0A8"/>
+            <text x="170" y="218" text-anchor="middle" font-family="Georgia" font-size="13" fill="#8B5E66" opacity="0.65">ваше фото</text>
+          </svg>
+        </div>
+        <div class="reg-badge">
+          <span class="reg-badge-city">Praha</span>
+          <span class="reg-badge-sub">Makeup Artist</span>
+        </div>
+      </div>
+      <div class="reg-form-wrap fade-up">
+        <form id="regForm">
+          <h2 data-i18n="reg_title">Создайте аккаунт</h2>
+          <p class="reg-sub" data-i18n="reg_sub">Зарегистрируйтесь, чтобы бронировать время и получать специальные предложения</p>
+          <div class="form-group">
+            <label data-i18n="label_name">Имя</label>
+            <input type="text" id="regName" placeholder="Анна" data-i18n-ph="ph_name" required/>
+          </div>
+          <div class="form-group">
+            <label data-i18n="label_email">Email</label>
+            <input type="email" id="regEmail" placeholder="anna@email.com" data-i18n-ph="ph_email" required/>
+          </div>
+          <div class="form-group">
+            <label data-i18n="label_phone">Телефон</label>
+            <input type="tel" id="regPhone" placeholder="+420 000 000 000" data-i18n-ph="ph_phone"/>
+          </div>
+          <div class="form-group">
+            <label data-i18n="label_pass">Пароль</label>
+            <input type="password" id="regPass" placeholder="Минимум 6 символов" data-i18n-ph="ph_pass" required/>
+          </div>
+          <div class="form-group">
+            <label style="display:flex;align-items:center;gap:.4rem;">Реферальный код <span style="font-size:.78rem;color:#a07070;">(необязательно)</span></label>
+            <input type="text" id="regRef" placeholder="Код подруги или знакомой" style="text-transform:uppercase;letter-spacing:.1em;" maxlength="8"/>
+          </div>
+          <p class="form-error" id="regError" style="display:none;color:#B8797F;font-size:.85rem;margin-bottom:.5rem;"></p>
+          <button type="submit" class="btn btn-primary btn-full" data-i18n="reg_btn">Зарегистрироваться</button>
+          <p class="reg-login-line">
+            <span data-i18n="reg_have">Уже есть аккаунт?</span>
+            <a href="#" data-i18n="reg_login"> Войти</a>
+          </p>
+          <p class="form-note" data-i18n="reg_agree">Регистрируясь, вы соглашаетесь с обработкой персональных данных</p>
+        </form>
+        <div class="reg-success" id="regSuccess" style="display:none">
+          <svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="30" stroke="#C9969D" stroke-width="1.5"/><path d="M20 32l8 8 16-16" stroke="#C9969D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h3 data-i18n="reg_ok_title">Добро пожаловать!</h3>
+          <p data-i18n="reg_ok_sub">Аккаунт создан. Теперь вы можете записаться на услугу.</p>
+          <a href="/booking" class="btn btn-primary" data-i18n="reg_ok_btn">Записаться</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-inner">
+    <a class="logo" href="/">KRISTINA<span>.</span></a>
+    <p class="footer-tagline" data-i18n="footer_tagline">Профессиональный визажист · Прага</p>
+    <nav class="footer-nav">
+      <a href="/" data-i18n="footer_nav_home">Главная</a>
+      <a href="/portfolio" data-i18n="footer_nav_portfolio">Портфолио</a>
+      <a href="/prices" data-i18n="footer_nav_prices">Прайс</a>
+      <a href="/booking" data-i18n="footer_nav_booking">Запись</a>
+      <a href="/privacy" data-i18n="footer_nav_privacy">Конфиденциальность</a>
+    </nav>
+    <p class="footer-copy" data-i18n="footer_copy">© 2026 Kristina · Все права защищены</p>
+  </div>
+</footer>
+
+<script src="/static/lang.js"></script>
+<script src="/static/script.js"></script>
+<script>
+  document.getElementById('regForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const errEl = document.getElementById('regError');
+    errEl.style.display = 'none';
+    const body = {
+      name: document.getElementById('regName').value,
+      email: document.getElementById('regEmail').value,
+      phone: document.getElementById('regPhone').value,
+      password: document.getElementById('regPass').value,
+      referral_code: document.getElementById('regRef').value.trim().toUpperCase() || ''
+    };
+    const res = await fetch('/api/register', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (data.ok) {
+      this.style.display = 'none';
+      document.getElementById('regSuccess').style.display = 'flex';
+    } else {
+      errEl.textContent = data.error === 'email_exists' ? 'Этот email уже зарегистрирован' : 'Ошибка. Попробуйте ещё раз.';
+      errEl.style.display = 'block';
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Оплата принята — KRISTINA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <style>
+    .success-wrap { min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 6rem 1.5rem 3rem; }
+    .success-card { background: #fff; border-radius: 20px; box-shadow: 0 8px 50px rgba(201,150,157,.2); padding: 3.5rem 2.5rem; max-width: 480px; width: 100%; text-align: center; }
+    .success-icon { margin: 0 auto 1.5rem; }
+    .success-icon svg { width: 72px; height: 72px; }
+    .success-card h1 { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 400; color: #3a2a2d; margin: 0 0 .7rem; }
+    .success-card p  { color: #a07070; line-height: 1.7; margin: 0 0 .5rem; }
+    .success-card .booking-ref { font-size: .85rem; color: #C9969D; margin-bottom: 2rem; }
+    .success-actions { display: flex; flex-direction: column; gap: .8rem; }
+    .confetti-bar { height: 4px; background: linear-gradient(90deg, #C9969D, #EDD5D8, #C9969D, #D4A0A8); border-radius: 2px; margin-bottom: 2rem; background-size: 200% 100%; animation: shimmer 2s linear infinite; }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  </style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a class="logo" href="/">KRISTINA<span>.</span></a>
+    <button class="burger" id="burger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/" data-i18n="nav_home">Главная</a></li>
+      <li><a href="/portfolio" data-i18n="nav_portfolio">Портфолио</a></li>
+      <li><a href="/prices" data-i18n="nav_prices">Прайс</a></li>
+      <li><a href="/before-after" data-i18n="nav_ba">До/После</a></li>
+      <li><a href="/faq">FAQ</a></li>
+      <li><a href="/booking" class="nav-cta" data-i18n="nav_booking">Запись</a></li>
+      {% if user %}
+        <li><a href="/cabinet" data-i18n="nav_cabinet">Кабинет</a></li>
+        <li><a href="/logout" style="color:#a07070;" data-i18n="nav_logout">Выйти</a></li>
+      {% else %}
+        <li><a href="/login" data-i18n="nav_login">Войти</a></li>
+      {% endif %}
+      <li>
+        <div class="lang-switch">
+          <button class="lang-btn" data-lang="ru">RU</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="cs">CS</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="success-wrap">
+  <div class="success-card">
+    <div class="confetti-bar"></div>
+    <div class="success-icon">
+      <svg viewBox="0 0 72 72" fill="none">
+        <circle cx="36" cy="36" r="34" stroke="#C9969D" stroke-width="1.5"/>
+        <path d="M22 36l9 9 19-19" stroke="#C9969D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h1 data-i18n="pay_success_title">Оплата прошла!</h1>
+    <p data-i18n="pay_success_text">Ваша запись подтверждена. Ждём вас!</p>
+    {% if booking_id %}
+      <p class="booking-ref"><span data-i18n="pay_booking_ref">Номер записи: #</span>{{ booking_id }}</p>
+    {% endif %}
+    <p style="font-size:.85rem;margin-bottom:2rem;" data-i18n="pay_reminder_note">Мы отправим напоминание накануне. Если возникнут вопросы — напишите напрямую.</p>
+    <div class="success-actions">
+      {% if user %}
+        <a href="/cabinet" class="btn btn-primary" data-i18n="pay_my_bookings">Мои записи</a>
+      {% endif %}
+      <a href="/" class="btn btn-ghost" data-i18n="pay_go_home">На главную</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container footer-inner">
+    <a class="logo" href="/">KRISTINA<span>.</span></a>
+    <p class="footer-tagline">Профессиональный визажист · Прага</p>
+    <nav class="footer-nav">
+      <a href="/">Главная</a>
+      <a href="/portfolio">Портфолио</a>
+      <a href="/prices">Прайс</a>
+      <a href="/booking">Запись</a>
+      <a href="/privacy">Конфиденциальность</a>
+    </nav>
+    <p class="footer-copy">© 2026 Kristina · Все права защищены</p>
+  </div>
+</footer>
+
+<script src="/static/lang.js"></script>
+<script src="/static/script.js"></script>
+</body>
+</html>

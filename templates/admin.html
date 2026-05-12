@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Админ — KRISTINA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <style>
+    .adm { max-width: 1200px; margin: 0 auto; padding: 7rem 1.5rem 4rem; }
+    .adm-title { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 400; color: #3a2a2d; margin: 0 0 2rem; }
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 2.5rem; }
+    .stat-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 16px rgba(201,150,157,.13); padding: 1.2rem 1.4rem; text-align: center; }
+    .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 500; color: #C9969D; }
+    .stat-label { font-size: .78rem; color: #a07070; margin-top: .2rem; }
+    .adm-section { background: #fff; border-radius: 14px; box-shadow: 0 2px 20px rgba(201,150,157,.1); padding: 1.8rem; margin-bottom: 2rem; }
+    .adm-section h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 400; color: #3a2a2d; margin: 0 0 1.2rem; }
+    table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+    th { text-align: left; color: #a07070; font-weight: 400; padding: .5rem .8rem; border-bottom: 1px solid #f0e0e2; }
+    td { padding: .65rem .8rem; border-bottom: 1px solid #faf0f1; vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    .status-badge { display: inline-block; padding: .2rem .65rem; border-radius: 20px; font-size: .75rem; font-weight: 500; }
+    .status-pending   { background: #FFF3CD; color: #856404; }
+    .status-confirmed { background: #D1ECE4; color: #155724; }
+    .status-cancelled { background: #F8D7DA; color: #721C24; }
+    select.status-sel { border: 1px solid #E8C5C9; border-radius: 6px; padding: .2rem .5rem; font-size: .8rem; color: #3a2a2d; background: #fff; cursor: pointer; }
+    .block-form { display: flex; gap: .8rem; flex-wrap: wrap; align-items: flex-end; }
+    .block-form .form-group { margin: 0; flex: 1; min-width: 140px; }
+    .block-form input { font-size: .85rem; }
+    .blocked-list { margin-top: 1.2rem; }
+    .blocked-item { display: flex; align-items: center; justify-content: space-between; padding: .5rem .2rem; border-bottom: 1px solid #faf0f1; font-size: .85rem; color: #5a3a3d; }
+    .blocked-item:last-child { border-bottom: none; }
+    .btn-del { background: none; border: none; color: #C9969D; cursor: pointer; font-size: 1.1rem; padding: 0 .4rem; }
+    .btn-del:hover { color: #a05060; }
+    .tab-row { display: flex; gap: .5rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
+    .tab-btn { border: 1px solid #E8C5C9; background: #fff; color: #a07070; border-radius: 8px; padding: .35rem 1rem; font-size: .82rem; cursor: pointer; transition: all .2s; }
+    .tab-btn.active, .tab-btn:hover { background: #C9969D; color: #fff; border-color: #C9969D; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Calendar */
+    .cal-nav { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.2rem; }
+    .cal-nav button { border: 1px solid #E8C5C9; background: #fff; color: #C9969D; border-radius: 8px; padding: .3rem .8rem; cursor: pointer; font-size: 1rem; }
+    .cal-nav span { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: #3a2a2d; }
+    .cal-grid { display: grid; grid-template-columns: 60px repeat(5, 1fr); gap: 2px; }
+    .cal-head { background: #FBF2F3; color: #C9969D; font-size: .78rem; font-weight: 500; text-align: center; padding: .5rem .2rem; border-radius: 6px; }
+    .cal-time { color: #a07070; font-size: .75rem; text-align: right; padding: .4rem .6rem 0 0; line-height: 1; }
+    .cal-cell { background: #faf8f8; border-radius: 4px; min-height: 38px; cursor: default; position: relative; padding: 3px 4px; font-size: .72rem; }
+    .cal-cell.free { background: #faf8f8; }
+    .cal-cell.pending { background: #FFF3CD; cursor: pointer; }
+    .cal-cell.confirmed { background: #D1ECE4; cursor: pointer; }
+    .cal-cell.cancelled { background: #F8D7DA; cursor: pointer; }
+    .cal-cell.blocked { background: #e8e0e0; }
+    .cal-cell.today-col { outline: 1px solid #C9969D; }
+    .cal-cell-name { font-weight: 500; color: #3a2a2d; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cal-cell-svc { color: #a07070; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Client modal */
+    .modal-bg { display: none; position: fixed; inset: 0; background: rgba(58,42,45,.45); z-index: 200; align-items: center; justify-content: center; }
+    .modal-bg.open { display: flex; }
+    .modal { background: #fff; border-radius: 16px; box-shadow: 0 8px 40px rgba(201,150,157,.25); padding: 2rem; width: 90%; max-width: 620px; max-height: 90vh; overflow-y: auto; position: relative; }
+    .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.4rem; color: #a07070; cursor: pointer; }
+    .modal h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 400; color: #3a2a2d; margin: 0 0 1rem; }
+    .modal-info { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem .8rem; margin-bottom: 1rem; font-size: .85rem; color: #5a3a3d; }
+    .modal-info strong { color: #a07070; font-weight: 400; }
+    .modal-notes { width: 100%; box-sizing: border-box; border: 1px solid #E8C5C9; border-radius: 10px; padding: .7rem 1rem; font-family: 'Jost', sans-serif; font-size: .87rem; color: #3a2a2d; resize: vertical; min-height: 80px; }
+    .modal-hist-item { display: flex; justify-content: space-between; align-items: center; padding: .45rem 0; border-bottom: 1px solid #faf0f1; font-size: .82rem; color: #5a3a3d; }
+    .modal-hist-item:last-child { border-bottom: none; }
+
+    /* FAQ admin */
+    .faq-adm-item { display: flex; align-items: flex-start; gap: .8rem; padding: .8rem 0; border-bottom: 1px solid #faf0f1; }
+    .faq-adm-item:last-child { border-bottom: none; }
+    .faq-adm-content { flex: 1; }
+    .faq-adm-q { font-size: .9rem; color: #3a2a2d; font-weight: 500; margin: 0 0 .2rem; }
+    .faq-adm-cat { font-size: .75rem; color: #C9969D; }
+    .faq-adm-actions { display: flex; gap: .4rem; flex-shrink: 0; }
+    .faq-adm-actions button { border: 1px solid #E8C5C9; background: #fff; color: #a07070; border-radius: 6px; padding: .2rem .6rem; font-size: .78rem; cursor: pointer; }
+    .faq-adm-actions button:hover { background: #FBF2F3; }
+    .faq-adm-actions .btn-del-faq { border-color: #F8D7DA; color: #721C24; }
+
+    /* Settings */
+    .settings-row { display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end; margin-bottom: 1.5rem; }
+    .settings-row .form-group { margin: 0; min-width: 120px; }
+    .days-grid { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .4rem; }
+    .day-check { display: flex; align-items: center; gap: .3rem; font-size: .85rem; color: #5a3a3d; cursor: pointer; }
+
+    @media(max-width:700px) {
+      table { display: block; overflow-x: auto; }
+      .cal-grid { grid-template-columns: 44px repeat(5, 1fr); }
+      .modal-info { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a class="logo" href="/">KRISTINA<span>.</span></a>
+    <button class="burger" id="burger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/">Главная</a></li>
+      <li><a href="/portfolio">Портфолио</a></li>
+      <li><a href="/prices">Прайс</a></li>
+      <li><a href="/booking" class="nav-cta">Запись</a></li>
+      <li><a href="/cabinet">Кабинет</a></li>
+      <li><a href="/admin" class="active">Админ</a></li>
+      <li><a href="/logout" style="color:#a07070;">Выйти</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="adm">
+  <h1 class="adm-title">Панель управления</h1>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num">{{ stats.total }}</div><div class="stat-label">Всего записей</div></div>
+    <div class="stat-card"><div class="stat-num">{{ stats.pending }}</div><div class="stat-label">Ожидают</div></div>
+    <div class="stat-card"><div class="stat-num">{{ stats.confirmed }}</div><div class="stat-label">Подтверждено</div></div>
+    <div class="stat-card"><div class="stat-num">{{ stats.cancelled }}</div><div class="stat-label">Отменено</div></div>
+    <div class="stat-card"><div class="stat-num">{{ stats.revenue }}</div><div class="stat-label">Выручка CZK</div></div>
+    <div class="stat-card"><div class="stat-num">{{ stats.users }}</div><div class="stat-label">Клиентов</div></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-row">
+    <button class="tab-btn active" onclick="switchTab('bookings',this)">Записи</button>
+    <button class="tab-btn" onclick="switchTab('calendar',this)">Календарь</button>
+    <button class="tab-btn" onclick="switchTab('clients',this)">Клиенты</button>
+    <button class="tab-btn" onclick="switchTab('faq',this)">FAQ</button>
+    <button class="tab-btn" onclick="switchTab('blocks',this)">Блокировки</button>
+    <button class="tab-btn" onclick="switchTab('settings',this)">Настройки</button>
+  </div>
+
+  <!-- ── Bookings tab ── -->
+  <div class="tab-panel active adm-section" id="tab-bookings">
+    <h3>Все записи</h3>
+    <table id="bookingsTable">
+      <thead>
+        <tr><th>#</th><th>Клиент</th><th>Телефон</th><th>Услуга</th><th>Дата</th><th>Время</th><th>Сумма</th><th>Скидка</th><th>Фото</th><th>Оплата</th><th>Статус</th></tr>
+      </thead>
+      <tbody>
+        {% for b in bookings %}
+        <tr id="row-{{ b.id }}">
+          <td>{{ b.id }}</td>
+          <td>{{ b.first_name }} {{ b.last_name }}<br/><span style="color:#a07070;font-size:.8rem;">{{ b.email }}</span></td>
+          <td>{{ b.phone }}</td>
+          <td>{{ b.service_label }}</td>
+          <td>{{ b.date }}</td>
+          <td>{{ b.time }}</td>
+          <td>{{ b.total }} CZK</td>
+          <td>{% if b.discount_applied %}<span style="color:#C9969D;font-size:.8rem;">−{{ b.discount_applied }} CZK</span>{% else %}—{% endif %}</td>
+          <td>{% if b.photo_permission %}<span style="color:#C9969D;" title="Разрешено">📸</span>{% else %}—{% endif %}</td>
+          <td>{% if b.payment_status=='paid' %}<span style="color:#155724;font-size:.8rem;">✓ Оплачено</span>{% else %}<span style="color:#a07070;font-size:.8rem;">Не оплачено</span>{% endif %}</td>
+          <td>
+            <select class="status-sel" onchange="updateStatus({{ b.id }}, this.value)">
+              <option value="pending"   {% if b.status=='pending'   %}selected{% endif %}>Ожидает</option>
+              <option value="confirmed" {% if b.status=='confirmed' %}selected{% endif %}>Подтверждено</option>
+              <option value="cancelled" {% if b.status=='cancelled' %}selected{% endif %}>Отменено</option>
+            </select>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% if not bookings %}<p style="color:#a07070;text-align:center;padding:2rem 0;">Записей пока нет</p>{% endif %}
+  </div>
+
+  <!-- ── Calendar tab ── -->
+  <div class="tab-panel adm-section" id="tab-calendar">
+    <h3>Календарь записей</h3>
+    <div class="cal-nav">
+      <button onclick="calWeek(-1)">&#8592;</button>
+      <span id="calWeekLabel"></span>
+      <button onclick="calWeek(1)">&#8594;</button>
+      <button onclick="calToday()" style="margin-left:.5rem;font-size:.8rem;">Сегодня</button>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div style="display:flex;gap:1rem;margin-top:.8rem;flex-wrap:wrap;">
+      <span style="font-size:.78rem;color:#856404;"><span style="display:inline-block;width:12px;height:12px;background:#FFF3CD;border-radius:3px;margin-right:4px;"></span>Ожидает</span>
+      <span style="font-size:.78rem;color:#155724;"><span style="display:inline-block;width:12px;height:12px;background:#D1ECE4;border-radius:3px;margin-right:4px;"></span>Подтверждено</span>
+      <span style="font-size:.78rem;color:#721C24;"><span style="display:inline-block;width:12px;height:12px;background:#F8D7DA;border-radius:3px;margin-right:4px;"></span>Отменено</span>
+      <span style="font-size:.78rem;color:#666;"><span style="display:inline-block;width:12px;height:12px;background:#e8e0e0;border-radius:3px;margin-right:4px;"></span>Заблокировано</span>
+    </div>
+  </div>
+
+  <!-- ── Clients tab ── -->
+  <div class="tab-panel adm-section" id="tab-clients">
+    <h3>Клиенты</h3>
+    <table>
+      <thead><tr><th>#</th><th>Имя</th><th>Email</th><th>Телефон</th><th>Реф. код</th><th>Скидка</th><th>Дата рег.</th><th>Роль</th><th></th></tr></thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td>{{ u.id }}</td>
+          <td>{{ u.name }}</td>
+          <td>{{ u.email }}</td>
+          <td>{{ u.phone or '—' }}</td>
+          <td><code style="font-size:.8rem;color:#C9969D;">{{ u.referral_code or '—' }}</code></td>
+          <td>{% if u.pending_discount %}<span style="color:#C9969D;">{{ u.pending_discount }}%</span>{% else %}—{% endif %}</td>
+          <td>{{ u.created_at.strftime('%d.%m.%Y') }}</td>
+          <td>{% if u.is_admin %}<span style="color:#C9969D;">Админ</span>{% else %}Клиент{% endif %}</td>
+          <td><button onclick="openClient({{ u.id }})" style="border:1px solid #E8C5C9;background:#fff;color:#C9969D;border-radius:6px;padding:.2rem .6rem;font-size:.78rem;cursor:pointer;">Карточка</button></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── FAQ tab ── -->
+  <div class="tab-panel adm-section" id="tab-faq">
+    <h3>Управление FAQ</h3>
+    <div id="faqList">
+      {% for item in faq_items %}
+      <div class="faq-adm-item" id="faq-item-{{ item.id }}">
+        <div class="faq-adm-content">
+          <p class="faq-adm-q">{{ item.question }}</p>
+          <span class="faq-adm-cat">{{ item.category }}</span>
+          {% if not item.is_visible %}<span style="font-size:.75rem;color:#a07070;margin-left:.5rem;">(скрыт)</span>{% endif %}
+        </div>
+        <div class="faq-adm-actions">
+          <button onclick="editFaq({{ item.id }}, {{ item.question|tojson }}, {{ item.answer|tojson }}, {{ item.category|tojson }}, {{ item.order_num }}, {{ item.is_visible|lower }})">Ред.</button>
+          <button class="btn-del-faq" onclick="deleteFaq({{ item.id }})">✕</button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <button class="btn btn-primary" onclick="newFaq()" style="margin-top:1.2rem;">+ Добавить вопрос</button>
+  </div>
+
+  <!-- ── Blocks tab ── -->
+  <div class="tab-panel adm-section" id="tab-blocks">
+    <h3>Заблокировать слот</h3>
+    <div class="block-form">
+      <div class="form-group">
+        <label>Дата</label>
+        <input type="date" id="blockDate"/>
+      </div>
+      <div class="form-group">
+        <label>Время</label>
+        <select id="blockTime" style="width:100%;padding:.75rem 1rem;border:1px solid #E8C5C9;border-radius:10px;font-size:.95rem;color:#3a2a2d;background:#fff;">
+          <option>10:00</option><option>11:00</option><option>12:00</option>
+          <option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option>
+          <option>17:00</option><option>18:00</option><option>19:00</option><option>20:00</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Причина (необязательно)</label>
+        <input type="text" id="blockReason" placeholder="Личный выходной"/>
+      </div>
+      <button class="btn btn-primary" onclick="addBlock()" style="margin-bottom:0;white-space:nowrap;">Заблокировать</button>
+    </div>
+    <div class="blocked-list" id="blockedList">
+      <p style="color:#a07070;font-size:.85rem;margin:.8rem 0 .5rem;">Активные блокировки:</p>
+      {% for s in blocked %}
+      <div class="blocked-item" id="block-{{ s.id }}">
+        <span>📅 {{ s.date }} в {{ s.time }}{% if s.reason %} — {{ s.reason }}{% endif %}</span>
+        <button class="btn-del" onclick="removeBlock({{ s.id }})" title="Удалить">✕</button>
+      </div>
+      {% else %}
+        <p id="noBlocks" style="color:#a07070;font-size:.85rem;margin:.5rem 0;">Нет заблокированных слотов</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- ── Settings tab ── -->
+  <div class="tab-panel adm-section" id="tab-settings">
+    <h3>Рабочие часы</h3>
+    <div class="settings-row">
+      <div class="form-group">
+        <label>Начало рабочего дня</label>
+        <select id="settingStart" style="width:100%;padding:.75rem 1rem;border:1px solid #E8C5C9;border-radius:10px;font-size:.95rem;color:#3a2a2d;background:#fff;">
+          {% for h in range(6, 23) %}<option value="{{ h }}" {% if settings.get('work_start','10')|int == h %}selected{% endif %}>{{ '%02d:00'|format(h) }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Конец рабочего дня</label>
+        <select id="settingEnd" style="width:100%;padding:.75rem 1rem;border:1px solid #E8C5C9;border-radius:10px;font-size:.95rem;color:#3a2a2d;background:#fff;">
+          {% for h in range(6, 23) %}<option value="{{ h }}" {% if settings.get('work_end','20')|int == h %}selected{% endif %}>{{ '%02d:00'|format(h) }}</option>{% endfor %}
+        </select>
+      </div>
+    </div>
+    <p style="font-size:.85rem;color:#a07070;margin:0 0 .6rem;">Рабочие дни:</p>
+    <div class="days-grid" id="daysGrid">
+      {% set work_days_str = settings.get('work_days','0,1,2,3,4') %}
+      {% for day_num, day_name in [(0,'Пн'),(1,'Вт'),(2,'Ср'),(3,'Чт'),(4,'Пт'),(5,'Сб'),(6,'Вс')] %}
+      <label class="day-check">
+        <input type="checkbox" name="work_day" value="{{ day_num }}"
+          {% if day_num|string in work_days_str.split(',') %}checked{% endif %}/>
+        {{ day_name }}
+      </label>
+      {% endfor %}
+    </div>
+    <button class="btn btn-primary" onclick="saveSettings()" style="margin-top:1.5rem;">Сохранить</button>
+    <span id="settingsSaved" style="display:none;color:#155724;font-size:.85rem;margin-left:1rem;">✓ Сохранено</span>
+  </div>
+
+</div>
+
+<!-- Client modal -->
+<div class="modal-bg" id="clientModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeClient()">✕</button>
+    <h3 id="clientName">Карточка клиента</h3>
+    <div class="modal-info" id="clientInfo"></div>
+    <p style="font-size:.82rem;color:#a07070;margin:.8rem 0 .4rem;text-transform:uppercase;letter-spacing:.05em;">Заметки</p>
+    <textarea class="modal-notes" id="clientNotes" placeholder="Личные заметки, предпочтения клиента..."></textarea>
+    <button class="btn btn-primary" onclick="saveNotes()" style="margin-top:.6rem;font-size:.82rem;padding:.4rem 1rem;">Сохранить заметки</button>
+    <p style="font-size:.82rem;color:#a07070;margin:1.2rem 0 .4rem;text-transform:uppercase;letter-spacing:.05em;">История записей</p>
+    <div id="clientHistory"></div>
+  </div>
+</div>
+
+<!-- FAQ modal -->
+<div class="modal-bg" id="faqModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeFaqModal()">✕</button>
+    <h3 id="faqModalTitle">Новый вопрос</h3>
+    <input type="hidden" id="faqEditId" value=""/>
+    <div class="form-group" style="margin-bottom:.8rem;">
+      <label>Категория</label>
+      <input type="text" id="faqCat" placeholder="Запись и оплата" value="Общие вопросы"/>
+    </div>
+    <div class="form-group" style="margin-bottom:.8rem;">
+      <label>Порядок</label>
+      <input type="number" id="faqOrder" value="0" style="width:80px;"/>
+    </div>
+    <div class="form-group" style="margin-bottom:.8rem;">
+      <label>Вопрос</label>
+      <input type="text" id="faqQ" placeholder="Введите вопрос"/>
+    </div>
+    <div class="form-group" style="margin-bottom:.8rem;">
+      <label>Ответ</label>
+      <textarea class="modal-notes" id="faqA" placeholder="Введите ответ (поддерживается HTML)"></textarea>
+    </div>
+    <label class="day-check" style="margin-bottom:1rem;">
+      <input type="checkbox" id="faqVisible" checked/> Видимый
+    </label>
+    <div style="display:flex;gap:.8rem;">
+      <button class="btn btn-primary" onclick="saveFaq()">Сохранить</button>
+      <button onclick="closeFaqModal()" style="border:1px solid #E8C5C9;background:#fff;color:#a07070;border-radius:8px;padding:.4rem 1rem;cursor:pointer;">Отмена</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container footer-inner">
+    <a class="logo" href="/">KRISTINA<span>.</span></a>
+    <p class="footer-tagline">Профессиональный визажист · Прага</p>
+    <nav class="footer-nav">
+      <a href="/">Главная</a><a href="/portfolio">Портфолио</a><a href="/prices">Прайс</a><a href="/booking">Запись</a><a href="/privacy">Конфиденциальность</a>
+    </nav>
+    <p class="footer-copy">© 2026 Kristina · Все права защищены</p>
+  </div>
+</footer>
+
+<script src="/static/script.js"></script>
+<script>
+// ── All bookings as JS array for calendar ──
+const ALL_BOOKINGS = [
+  {% for b in bookings %}
+  {id:{{ b.id }}, date:"{{ b.date }}", time:"{{ b.time }}", status:"{{ b.status }}",
+   first_name:{{ b.first_name|tojson }}, last_name:{{ b.last_name|tojson }},
+   service_label:{{ b.service_label|tojson }}},
+  {% endfor %}
+];
+const ALL_BLOCKED = [
+  {% for s in blocked %}
+  {date:"{{ s.date }}", time:"{{ s.time }}", reason:{{ s.reason|tojson }}},
+  {% endfor %}
+];
+
+// ── Tab switching ──
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'calendar') renderCalendar();
+}
+
+// ── Booking status ──
+async function updateStatus(id, status) {
+  await fetch(`/api/admin/booking/${id}/status`, {
+    method: 'PATCH', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({status})
+  });
+}
+
+// ── Block slots ──
+async function addBlock() {
+  const date = document.getElementById('blockDate').value;
+  const time = document.getElementById('blockTime').value;
+  const reason = document.getElementById('blockReason').value;
+  if (!date) { alert('Выберите дату'); return; }
+  const res = await fetch('/api/admin/block-slot', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({date, time, reason})
+  });
+  const data = await res.json();
+  if (data.ok) {
+    document.getElementById('noBlocks') && document.getElementById('noBlocks').remove();
+    const div = document.createElement('div');
+    div.className = 'blocked-item';
+    div.id = 'block-' + (data.id || Date.now());
+    div.innerHTML = `<span>📅 ${date} в ${time}${reason?' — '+reason:''}</span><button class="btn-del" onclick="removeBlock('${data.id||''}',this.closest('.blocked-item'))" title="Удалить">✕</button>`;
+    document.getElementById('blockedList').appendChild(div);
+    document.getElementById('blockDate').value = '';
+    document.getElementById('blockReason').value = '';
+  }
+}
+async function removeBlock(id, el) {
+  if (!id) { if(el) el.remove(); return; }
+  await fetch(`/api/admin/block-slot/${id}`, {method:'DELETE'});
+  const item = document.getElementById('block-'+id) || el;
+  if (item) item.remove();
+}
+
+// ── Calendar ──
+let calOffset = 0;
+const DAY_NAMES = ['Пн','Вт','Ср','Чт','Пт'];
+
+function getWeekStart(offset) {
+  const now = new Date();
+  const day = now.getDay() || 7;
+  const mon = new Date(now);
+  mon.setDate(now.getDate() - day + 1 + offset * 7);
+  mon.setHours(0,0,0,0);
+  return mon;
+}
+function fmtDate(d) {
+  return d.toISOString().slice(0,10);
+}
+function calWeek(dir) { calOffset += dir; renderCalendar(); }
+function calToday() { calOffset = 0; renderCalendar(); }
+
+function renderCalendar() {
+  const mon = getWeekStart(calOffset);
+  const days = [];
+  for (let i=0;i<5;i++) {
+    const d = new Date(mon);
+    d.setDate(mon.getDate()+i);
+    days.push(d);
+  }
+  const todayStr = fmtDate(new Date());
+  const label = days[0].toLocaleDateString('ru',{day:'numeric',month:'long'}) + ' — ' +
+                days[4].toLocaleDateString('ru',{day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('calWeekLabel').textContent = label;
+
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+  // Header row
+  const empty = document.createElement('div');
+  empty.className = 'cal-head';
+  grid.appendChild(empty);
+  days.forEach((d,i) => {
+    const h = document.createElement('div');
+    h.className = 'cal-head';
+    h.textContent = DAY_NAMES[i] + ' ' + d.getDate();
+    grid.appendChild(h);
+  });
+
+  // Time rows: fetch work_start/end from page settings
+  const workStart = parseInt('{{ settings.get("work_start","10") }}');
+  const workEnd   = parseInt('{{ settings.get("work_end","20") }}');
+
+  for (let hr=workStart; hr<=workEnd; hr++) {
+    const timeStr = ('0'+hr).slice(-2)+':00';
+    const timeEl = document.createElement('div');
+    timeEl.className = 'cal-time';
+    timeEl.textContent = timeStr;
+    grid.appendChild(timeEl);
+
+    days.forEach(d => {
+      const dateStr = fmtDate(d);
+      const booking = ALL_BOOKINGS.find(b => b.date===dateStr && b.time===timeStr);
+      const isBlocked = ALL_BLOCKED.some(s => s.date===dateStr && s.time===timeStr);
+      const cell = document.createElement('div');
+      cell.className = 'cal-cell';
+      if (dateStr === todayStr) cell.classList.add('today-col');
+      if (isBlocked) {
+        cell.classList.add('blocked');
+        cell.title = 'Заблокировано';
+      } else if (booking) {
+        cell.classList.add(booking.status);
+        cell.innerHTML = `<div class="cal-cell-name">${booking.first_name} ${booking.last_name}</div><div class="cal-cell-svc">${booking.service_label}</div>`;
+        cell.title = `${booking.first_name} ${booking.last_name} — ${booking.service_label}`;
+        cell.onclick = () => {
+          switchTab('bookings', document.querySelector('.tab-btn'));
+          setTimeout(() => {
+            const row = document.getElementById('row-'+booking.id);
+            if (row) { row.scrollIntoView({behavior:'smooth',block:'center'}); row.style.background='#FBF2F3'; setTimeout(()=>row.style.background='',1500); }
+          }, 100);
+        };
+      } else {
+        cell.classList.add('free');
+      }
+      grid.appendChild(cell);
+    });
+  }
+}
+renderCalendar();
+
+// ── Client modal ──
+let _currentClientId = null;
+async function openClient(id) {
+  _currentClientId = id;
+  const res = await fetch('/api/admin/client/'+id);
+  const d = await res.json();
+  document.getElementById('clientName').textContent = d.name;
+  document.getElementById('clientNotes').value = d.admin_notes || '';
+  const info = document.getElementById('clientInfo');
+  info.innerHTML = `
+    <span><strong>Email</strong><br/>${d.email}</span>
+    <span><strong>Телефон</strong><br/>${d.phone||'—'}</span>
+    <span><strong>Реф. код</strong><br/><code>${d.referral_code||'—'}</code></span>
+    <span><strong>Пришёл по коду</strong><br/>${d.referred_by||'—'}</span>
+    <span><strong>Скидка</strong><br/>${d.pending_discount?d.pending_discount+'%':'—'}</span>
+    <span><strong>Регистрация</strong><br/>${d.created_at}</span>
+  `;
+  const hist = document.getElementById('clientHistory');
+  if (d.bookings.length === 0) {
+    hist.innerHTML = '<p style="color:#a07070;font-size:.85rem;">Записей нет</p>';
+  } else {
+    hist.innerHTML = d.bookings.map(b => {
+      const statusMap = {pending:'Ожидает',confirmed:'Подтверждено',cancelled:'Отменено'};
+      const clsMap = {pending:'status-pending',confirmed:'status-confirmed',cancelled:'status-cancelled'};
+      return `<div class="modal-hist-item">
+        <span>${b.date} ${b.time} — ${b.service_label}</span>
+        <span>
+          <span class="status-badge ${clsMap[b.status]}">${statusMap[b.status]}</span>
+          <span style="color:#5a3a3d;font-size:.8rem;margin-left:.5rem;">${b.total} CZK</span>
+        </span>
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('clientModal').classList.add('open');
+}
+function closeClient() {
+  document.getElementById('clientModal').classList.remove('open');
+  _currentClientId = null;
+}
+async function saveNotes() {
+  if (!_currentClientId) return;
+  const notes = document.getElementById('clientNotes').value;
+  await fetch('/api/admin/client/'+_currentClientId+'/notes', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({notes})
+  });
+  const btn = event.target;
+  btn.textContent = '✓ Сохранено';
+  setTimeout(() => btn.textContent = 'Сохранить заметки', 2000);
+}
+document.getElementById('clientModal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeClient();
+});
+
+// ── FAQ management ──
+function newFaq() {
+  document.getElementById('faqModalTitle').textContent = 'Новый вопрос';
+  document.getElementById('faqEditId').value = '';
+  document.getElementById('faqCat').value = 'Общие вопросы';
+  document.getElementById('faqOrder').value = '0';
+  document.getElementById('faqQ').value = '';
+  document.getElementById('faqA').value = '';
+  document.getElementById('faqVisible').checked = true;
+  document.getElementById('faqModal').classList.add('open');
+}
+function editFaq(id, q, a, cat, order, visible) {
+  document.getElementById('faqModalTitle').textContent = 'Редактировать вопрос';
+  document.getElementById('faqEditId').value = id;
+  document.getElementById('faqCat').value = cat;
+  document.getElementById('faqOrder').value = order;
+  document.getElementById('faqQ').value = q;
+  document.getElementById('faqA').value = a;
+  document.getElementById('faqVisible').checked = visible;
+  document.getElementById('faqModal').classList.add('open');
+}
+function closeFaqModal() {
+  document.getElementById('faqModal').classList.remove('open');
+}
+async function saveFaq() {
+  const id = document.getElementById('faqEditId').value;
+  const body = {
+    question: document.getElementById('faqQ').value,
+    answer: document.getElementById('faqA').value,
+    category: document.getElementById('faqCat').value,
+    order_num: parseInt(document.getElementById('faqOrder').value)||0,
+    is_visible: document.getElementById('faqVisible').checked,
+  };
+  if (!body.question) { alert('Введите вопрос'); return; }
+  let res;
+  if (id) {
+    res = await fetch('/api/admin/faq/'+id, {method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+    // Update in DOM
+    const row = document.getElementById('faq-item-'+id);
+    if (row) {
+      row.querySelector('.faq-adm-q').textContent = body.question;
+      row.querySelector('.faq-adm-cat').textContent = body.category;
+    }
+  } else {
+    res = await fetch('/api/admin/faq', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+    const data = await res.json();
+    const div = document.createElement('div');
+    div.className = 'faq-adm-item';
+    div.id = 'faq-item-'+data.id;
+    div.innerHTML = `<div class="faq-adm-content"><p class="faq-adm-q">${data.question}</p><span class="faq-adm-cat">${data.category}</span></div>
+      <div class="faq-adm-actions">
+        <button onclick="editFaq(${data.id},${JSON.stringify(data.question)},${JSON.stringify(data.answer)},${JSON.stringify(data.category)},${data.order_num},${data.is_visible})">Ред.</button>
+        <button class="btn-del-faq" onclick="deleteFaq(${data.id})">✕</button>
+      </div>`;
+    document.getElementById('faqList').appendChild(div);
+  }
+  closeFaqModal();
+}
+async function deleteFaq(id) {
+  if (!confirm('Удалить этот вопрос?')) return;
+  await fetch('/api/admin/faq/'+id, {method:'DELETE'});
+  const el = document.getElementById('faq-item-'+id);
+  if (el) el.remove();
+}
+
+// ── Settings ──
+async function saveSettings() {
+  const start = parseInt(document.getElementById('settingStart').value);
+  const end = parseInt(document.getElementById('settingEnd').value);
+  const days = [...document.querySelectorAll('[name=work_day]:checked')].map(el => parseInt(el.value));
+  await fetch('/api/admin/settings', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({work_start:start, work_end:end, work_days:days})
+  });
+  const s = document.getElementById('settingsSaved');
+  s.style.display = 'inline';
+  setTimeout(() => s.style.display='none', 2500);
+}
+</script>
+</body>
+</html>

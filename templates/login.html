@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Войти — KRISTINA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/style.css"/>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a class="logo" href="/">KRISTINA<span>.</span></a>
+    <button class="burger" id="burger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/" data-i18n="nav_home">Главная</a></li>
+      <li><a href="/portfolio" data-i18n="nav_portfolio">Портфолио</a></li>
+      <li><a href="/prices" data-i18n="nav_prices">Прайс</a></li>
+      <li><a href="/before-after" data-i18n="nav_ba">До/После</a></li>
+      <li><a href="/faq">FAQ</a></li>
+      <li><a href="/booking" class="nav-cta" data-i18n="nav_booking">Запись</a></li>
+      <li><a href="/login" class="active" data-i18n="nav_login">Войти</a></li>
+      <li>
+        <div class="lang-switch">
+          <button class="lang-btn" data-lang="ru">RU</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="cs">CS</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<section style="min-height:80vh;display:flex;align-items:center;justify-content:center;padding:6rem 1rem 3rem;">
+  <div style="width:100%;max-width:420px;">
+
+    <div id="loginBlock">
+      <form id="loginForm" style="background:#fff;border-radius:16px;box-shadow:0 4px 40px rgba(201,150,157,.15);padding:2.5rem 2rem;">
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;margin:0 0 .4rem;color:#3a2a2d;" data-i18n="login_title">Войти</h2>
+        <p style="color:#a07070;font-size:.9rem;margin:0 0 1.8rem;" data-i18n="login_subtitle">Личный кабинет KRISTINA</p>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="loginEmail" placeholder="anna@email.com" required/>
+        </div>
+        <div class="form-group">
+          <label data-i18n="login_pass_label">Пароль</label>
+          <input type="password" id="loginPass" placeholder="Ваш пароль" data-i18n-ph="ph_login_pass" required/>
+        </div>
+        <p class="form-error" id="loginError" style="display:none;color:#B8797F;font-size:.85rem;margin-bottom:.75rem;"></p>
+        <button type="submit" class="btn btn-primary btn-full" data-i18n="login_btn">Войти</button>
+        <p style="text-align:center;margin-top:1.2rem;font-size:.85rem;color:#a07070;">
+          <span data-i18n="login_no_account">Нет аккаунта?</span> <a href="/#register" style="color:#C9969D;text-decoration:none;" data-i18n="login_register_link">Зарегистрироваться</a>
+        </p>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-inner">
+    <a class="logo" href="/">KRISTINA<span>.</span></a>
+    <p class="footer-tagline" data-i18n="footer_tagline">Профессиональный визажист · Прага</p>
+    <nav class="footer-nav">
+      <a href="/" data-i18n="footer_nav_home">Главная</a>
+      <a href="/portfolio" data-i18n="footer_nav_portfolio">Портфолио</a>
+      <a href="/prices" data-i18n="footer_nav_prices">Прайс</a>
+      <a href="/booking" data-i18n="footer_nav_booking">Запись</a>
+      <a href="/privacy" data-i18n="footer_nav_privacy">Конфиденциальность</a>
+    </nav>
+    <p class="footer-copy" data-i18n="footer_copy">© 2026 Kristina · Все права защищены</p>
+  </div>
+</footer>
+
+<script src="/static/lang.js"></script>
+<script src="/static/script.js"></script>
+<script>
+  document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const errEl = document.getElementById('loginError');
+    errEl.style.display = 'none';
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        email: document.getElementById('loginEmail').value,
+        password: document.getElementById('loginPass').value
+      })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      window.location.href = data.is_admin ? '/admin' : '/cabinet';
+    } else {
+      errEl.textContent = t('login_error_msg');
+      errEl.style.display = 'block';
+    }
+  });
+</script>
+</body>
+</html>

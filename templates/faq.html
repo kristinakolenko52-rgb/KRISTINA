@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>FAQ — KRISTINA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <style>
+    .faq-hero { padding: 7rem 1.5rem 3.5rem; text-align: center; background: linear-gradient(160deg, #FBF2F3 0%, #fff 100%); }
+    .faq-hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.4rem, 6vw, 3.8rem); font-weight: 400; color: #3a2a2d; margin: 0 0 .8rem; }
+    .faq-hero p  { color: #a07070; font-size: 1rem; max-width: 520px; margin: 0 auto; }
+    .faq-wrap    { max-width: 760px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+    .faq-cat     { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 500; color: #C9969D; margin: 2.5rem 0 1rem; }
+    .faq-item    { border-bottom: 1px solid #f0e0e2; }
+    .faq-q       { width: 100%; background: none; border: none; text-align: left; padding: 1.1rem 0; font-family: 'Jost', sans-serif; font-size: 1rem; font-weight: 400; color: #3a2a2d; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+    .faq-q .arrow { color: #C9969D; font-size: 1.2rem; transition: transform .3s; flex-shrink: 0; }
+    .faq-q.open .arrow { transform: rotate(45deg); }
+    .faq-a       { max-height: 0; overflow: hidden; transition: max-height .4s ease; }
+    .faq-a-inner { padding: 0 0 1.1rem; color: #5a3a3d; line-height: 1.8; font-size: .93rem; }
+    .faq-a-inner strong { color: #C9969D; }
+    .faq-cta     { background: linear-gradient(135deg, #C9969D, #D4A0A8); color: #fff; border-radius: 16px; padding: 2.5rem 2rem; text-align: center; margin-top: 3rem; }
+    .faq-cta h3  { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 400; margin: 0 0 .6rem; }
+    .faq-cta p   { margin: 0 0 1.3rem; opacity: .9; font-size: .9rem; }
+    .faq-cta .btn-primary { background: #fff; color: #C9969D; }
+    .faq-cta .btn-primary:hover { background: #f7e8ea; }
+  </style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a class="logo" href="/">KRISTINA<span>.</span></a>
+    <button class="burger" id="burger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/" data-i18n="nav_home">Главная</a></li>
+      <li><a href="/portfolio" data-i18n="nav_portfolio">Портфолио</a></li>
+      <li><a href="/prices" data-i18n="nav_prices">Прайс</a></li>
+      <li><a href="/before-after" data-i18n="nav_ba">До/После</a></li>
+      <li><a href="/faq" class="active">FAQ</a></li>
+      <li><a href="/booking" class="nav-cta" data-i18n="nav_booking">Запись</a></li>
+      {% if user %}
+        <li><a href="/cabinet" data-i18n="nav_cabinet">Кабинет</a></li>
+        {% if user.is_admin %}<li><a href="/admin">Админ</a></li>{% endif %}
+        <li><a href="/logout" style="color:#a07070;" data-i18n="nav_logout">Выйти</a></li>
+      {% else %}
+        <li><a href="/login" data-i18n="nav_login">Войти</a></li>
+      {% endif %}
+      <li>
+        <div class="lang-switch">
+          <button class="lang-btn" data-lang="ru">RU</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="cs">CS</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="faq-hero">
+  <p class="section-label" data-i18n="faq_eyebrow">Ответы на вопросы</p>
+  <h1 data-i18n="faq_title">Часто задаваемые<br/><em>вопросы</em></h1>
+  <p data-i18n="faq_sub">Всё, что нужно знать перед записью</p>
+</div>
+
+<div class="faq-wrap">
+
+  {% if categories %}
+    {% for cat_name, items in categories.items() %}
+    <p class="faq-cat">{{ cat_name }}</p>
+    {% for item in items %}
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggle(this)">
+        {{ item.question }}
+        <span class="arrow">+</span>
+      </button>
+      <div class="faq-a">
+        <div class="faq-a-inner">{{ item.answer|safe }}</div>
+      </div>
+    </div>
+    {% endfor %}
+    {% endfor %}
+  {% else %}
+    <p style="text-align:center;color:#a07070;padding:3rem 0;">Раздел FAQ пока заполняется.</p>
+  {% endif %}
+
+  <div class="faq-cta">
+    <h3 data-i18n="faq_cta_title">Остались вопросы?</h3>
+    <p data-i18n="faq_cta_sub">Напишите мне — отвечу в течение нескольких часов</p>
+    <a href="/booking" class="btn btn-primary" data-i18n="faq_cta_btn">Записаться онлайн</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="container footer-inner">
+    <a class="logo" href="/">KRISTINA<span>.</span></a>
+    <p class="footer-tagline">Профессиональный визажист · Прага</p>
+    <nav class="footer-nav">
+      <a href="/">Главная</a>
+      <a href="/portfolio">Портфолио</a>
+      <a href="/prices">Прайс</a>
+      <a href="/booking">Запись</a>
+      <a href="/privacy">Конфиденциальность</a>
+    </nav>
+    <p class="footer-copy">© 2026 Kristina · Все права защищены</p>
+  </div>
+</footer>
+
+<script src="/static/lang.js"></script>
+<script src="/static/script.js"></script>
+<script>
+  function toggle(btn) {
+    const panel = btn.nextElementSibling;
+    const isOpen = btn.classList.contains('open');
+    document.querySelectorAll('.faq-q.open').forEach(b => {
+      b.classList.remove('open');
+      b.nextElementSibling.style.maxHeight = '0';
+    });
+    if (!isOpen) {
+      btn.classList.add('open');
+      panel.style.maxHeight = panel.scrollHeight + 'px';
+    }
+  }
+</script>
+</body>
+</html>

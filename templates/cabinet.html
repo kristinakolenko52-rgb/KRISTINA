@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Личный кабинет — KRISTINA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/style.css"/>
+  <style>
+    .cabinet-wrap { max-width: 900px; margin: 0 auto; padding: 7rem 1.5rem 4rem; }
+    .cabinet-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1rem; }
+    .cabinet-title { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 400; color: #3a2a2d; margin: 0; }
+    .cabinet-hello { font-size: .9rem; color: #a07070; margin: .3rem 0 0; }
+    .booking-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 20px rgba(201,150,157,.12); padding: 1.5rem 1.8rem; margin-bottom: 1rem; display: grid; grid-template-columns: 1fr auto; gap: .5rem 1.5rem; align-items: start; }
+    .booking-card h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 500; color: #3a2a2d; margin: 0 0 .3rem; }
+    .booking-meta { font-size: .85rem; color: #a07070; line-height: 1.7; }
+    .booking-actions { display: flex; flex-direction: column; align-items: flex-end; gap: .5rem; }
+    .status-badge { display: inline-block; padding: .25rem .8rem; border-radius: 20px; font-size: .78rem; font-weight: 500; letter-spacing: .03em; }
+    .status-pending  { background: #FFF3CD; color: #856404; }
+    .status-confirmed { background: #D1ECE4; color: #155724; }
+    .status-cancelled { background: #F8D7DA; color: #721C24; }
+    .btn-cancel { background: none; border: 1px solid #C9969D; color: #C9969D; border-radius: 8px; padding: .35rem .9rem; font-size: .8rem; cursor: pointer; transition: all .2s; }
+    .btn-cancel:hover { background: #C9969D; color: #fff; }
+    .empty-state { text-align: center; padding: 4rem 1rem; color: #a07070; }
+    .empty-state svg { width: 64px; height: 64px; opacity: .4; margin-bottom: 1rem; }
+    .empty-state p { margin: 0 0 1.5rem; }
+  </style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a class="logo" href="/">KRISTINA<span>.</span></a>
+    <button class="burger" id="burger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/" data-i18n="nav_home">Главная</a></li>
+      <li><a href="/portfolio" data-i18n="nav_portfolio">Портфолио</a></li>
+      <li><a href="/prices" data-i18n="nav_prices">Прайс</a></li>
+      <li><a href="/before-after" data-i18n="nav_ba">До/После</a></li>
+      <li><a href="/faq">FAQ</a></li>
+      <li><a href="/booking" class="nav-cta" data-i18n="nav_booking">Запись</a></li>
+      <li><a href="/cabinet" class="active" data-i18n="nav_cabinet">Кабинет</a></li>
+      {% if user.is_admin %}<li><a href="/admin">Админ</a></li>{% endif %}
+      <li><a href="/logout" style="color:#a07070;" data-i18n="nav_logout">Выйти</a></li>
+      <li>
+        <div class="lang-switch">
+          <button class="lang-btn" data-lang="ru">RU</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="cs">CS</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="cabinet-wrap">
+  <div class="cabinet-header">
+    <div>
+      <h1 class="cabinet-title" data-i18n="cab_title">Мои записи</h1>
+      <p class="cabinet-hello"><span data-i18n="cab_welcome">Добро пожаловать</span>, {{ user.name }}</p>
+    </div>
+    <a href="/booking" class="btn btn-primary" data-i18n="cab_new_booking">+ Новая запись</a>
+  </div>
+
+  <!-- Referral & discount block -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin-bottom:2rem;">
+
+    <div style="background:#fff;border-radius:12px;box-shadow:0 2px 20px rgba(201,150,157,.12);padding:1.4rem 1.6rem;">
+      <p style="font-size:.78rem;color:#a07070;text-transform:uppercase;letter-spacing:.06em;margin:0 0 .5rem;" data-i18n="ref_code_label">Ваш реферальный код</p>
+      <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;">
+        <code id="refCode" style="font-size:1.3rem;font-weight:600;letter-spacing:.15em;color:#C9969D;background:#FBF2F3;padding:.3rem .8rem;border-radius:8px;">{{ user.referral_code or '—' }}</code>
+        <button id="refCopyBtn" onclick="copyRef()" style="border:1px solid #E8C5C9;background:#fff;color:#C9969D;border-radius:8px;padding:.3rem .8rem;font-size:.8rem;cursor:pointer;" data-i18n="ref_copy_btn">Копировать</button>
+      </div>
+      <p style="font-size:.8rem;color:#a07070;margin:.6rem 0 0;line-height:1.5;" data-i18n="ref_desc">Поделитесь кодом — когда подруга пройдёт процедуру, вам начислится <strong>−5%</strong> на следующую запись.</p>
+    </div>
+
+    {% if user.pending_discount %}
+    <div style="background:#D1ECE4;border-radius:12px;padding:1.4rem 1.6rem;display:flex;align-items:flex-start;gap:.8rem;">
+      <span style="font-size:1.6rem;line-height:1;">🎁</span>
+      <div>
+        <p style="font-size:.9rem;font-weight:500;color:#155724;margin:0 0 .3rem;"><span data-i18n="disc_has">У вас есть скидка</span> {{ user.pending_discount }}%!</p>
+        <p style="font-size:.8rem;color:#1e7e34;margin:0;" data-i18n="disc_sub">Применится автоматически при следующей записи.</p>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+
+  {% if bookings %}
+    {% for b in bookings %}
+    <div class="booking-card" id="card-{{ b.id }}">
+      <div>
+        <h4>{{ b.service_label }}</h4>
+        <div class="booking-meta">
+          📅 {{ b.date }} в {{ b.time }}<br/>
+          📍 <span data-i18n="{{ 'loc_home' if b.location == 'home' else 'loc_salon' }}">{% if b.location == 'home' %}Выезд на дом{% else %}Салон{% endif %}</span>
+          {% if b.address %} — {{ b.address }}{% endif %}<br/>
+          💰 {{ b.total }} CZK
+          {% if b.discount_applied %}<span style="color:#C9969D;"> (<span data-i18n="discount_word">скидка −</span>{{ b.discount_applied }} CZK)</span>{% endif %}
+          {% if b.photo_permission %}<br/>📸 <span data-i18n="cab_photo_note">Разрешено фото до/после</span>{% endif %}
+          {% if b.wishes %}<br/>💬 {{ b.wishes }}{% endif %}
+        </div>
+      </div>
+      <div class="booking-actions">
+        <span class="status-badge status-{{ b.status }}" data-i18n="status_{{ b.status }}">
+          {% if b.status == 'pending' %}Ожидает
+          {% elif b.status == 'confirmed' %}Подтверждено
+          {% else %}Отменено{% endif %}
+        </span>
+        {% if b.payment_status == 'paid' %}
+          <span style="font-size:.78rem;color:#155724;" data-i18n="pay_paid_mark">✓ Оплачено</span>
+        {% endif %}
+        {% if b.status != 'cancelled' %}
+          <button class="btn-cancel" onclick="cancelBooking({{ b.id }})" data-i18n="cab_cancel_btn">Отменить</button>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty-state">
+      <svg viewBox="0 0 64 64" fill="none"><rect x="10" y="14" width="44" height="40" rx="6" stroke="#C9969D" stroke-width="1.5"/><path d="M22 10v8M42 10v8M10 30h44" stroke="#C9969D" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <p data-i18n="cab_empty_text">У вас пока нет записей</p>
+      <a href="/booking" class="btn btn-primary" data-i18n="cab_book_btn">Записаться на услугу</a>
+    </div>
+  {% endif %}
+</div>
+
+<footer>
+  <div class="container footer-inner">
+    <a class="logo" href="/">KRISTINA<span>.</span></a>
+    <p class="footer-tagline" data-i18n="footer_tagline">Профессиональный визажист · Прага</p>
+    <nav class="footer-nav">
+      <a href="/" data-i18n="footer_nav_home">Главная</a>
+      <a href="/portfolio" data-i18n="footer_nav_portfolio">Портфолио</a>
+      <a href="/prices" data-i18n="footer_nav_prices">Прайс</a>
+      <a href="/booking" data-i18n="footer_nav_booking">Запись</a>
+      <a href="/privacy" data-i18n="footer_nav_privacy">Конфиденциальность</a>
+    </nav>
+    <p class="footer-copy" data-i18n="footer_copy">© 2026 Kristina · Все права защищены</p>
+  </div>
+</footer>
+
+<script src="/static/lang.js"></script>
+<script src="/static/script.js"></script>
+<script>
+  function copyRef() {
+    const code = document.getElementById('refCode').textContent.trim();
+    navigator.clipboard.writeText(code).then(() => {
+      const btn = document.getElementById('refCopyBtn');
+      btn.textContent = t('ref_copy_done');
+      setTimeout(() => btn.textContent = t('ref_copy_btn'), 2000);
+    });
+  }
+
+  async function cancelBooking(id) {
+    if (!confirm('Отменить эту запись?')) return;
+    const res = await fetch(`/api/booking/${id}/cancel`, { method: 'POST' });
+    const data = await res.json();
+    if (data.ok) {
+      const card = document.getElementById('card-' + id);
+      card.querySelector('.status-badge').className = 'status-badge status-cancelled';
+      card.querySelector('.status-badge').textContent = 'Отменено';
+      const btn = card.querySelector('.btn-cancel');
+      if (btn) btn.remove();
+    }
+  }
+</script>
+</body>
+</html>
